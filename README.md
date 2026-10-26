@@ -1,4 +1,4 @@
-# NalarTumbuh — Media IPA Berbasis LLM-CoT
+# Detektif Sains — Media IPA Berbasis LLM-CoT
 
 Media pembelajaran web untuk penelitian skripsi **"Pengaruh Media IPA Berbasis LLM-CoT dalam Meningkatkan Critical Thinking Siswa SMP pada Materi Pertumbuhan dan Perkembangan Makhluk Hidup"**.
 

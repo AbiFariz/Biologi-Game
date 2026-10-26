@@ -1,4 +1,4 @@
-/* NalarTumbuh — Modul 1: Beranda */
+/* Detektif Sains — Modul 1: Beranda */
 (function () {
   'use strict';
 

@@ -1,4 +1,4 @@
-/* Data konten bersama untuk semua modul NalarTumbuh. */
+/* Data konten bersama untuk semua modul Detektif Sains. */
 window.NT_DATA = {
   submateri: [
     {
