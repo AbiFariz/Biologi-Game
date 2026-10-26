@@ -1,0 +1,52 @@
+# Deploy otomatis ke cPanel (subdomain detektifsains.speakverse.id)
+# Berjalan setiap ada push ke branch main, SETELAH kode masuk ke GitHub.
+#
+# Kredensial TIDAK disimpan di repo. Isi sendiri di GitHub:
+#   Settings → Secrets and variables → Actions → New repository secret
+#     FTP_SERVER      contoh: ftp.speakverse.id  (lihat cPanel → FTP Accounts → Configure FTP Client)
+#     FTP_USERNAME    akun FTP khusus yang dibatasi ke folder subdomain
+#     FTP_PASSWORD    kata sandi akun FTP tersebut
+#     FTP_SERVER_DIR  (opsional) folder tujuan di server, diakhiri "/". Kosongkan bila
+#                     akun FTP sudah langsung mengarah ke folder subdomain.
+# Selama secrets belum diisi, langkah deploy dilewati (workflow tetap hijau).
+
+name: Deploy ke cPanel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-cpanel
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+    steps:
+      - name: Ambil kode
+        uses: actions/checkout@v4
+
+      - name: Lewati bila secrets belum diisi
+        if: env.FTP_SERVER == ''
+        run: echo "::notice::Secrets FTP belum diisi — deploy ke cPanel dilewati."
+
+      - name: Unggah ke cPanel via FTPS
+        if: env.FTP_SERVER != ''
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            README.md
+            docs/**

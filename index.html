@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beranda · NalarTumbuh</title>
+  <meta name="description" content="Media pembelajaran IPA berbasis LLM-CoT untuk siswa SMP kelas IX: Pertumbuhan dan Perkembangan Makhluk Hidup.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar" aria-label="Menu utama">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo-white.svg" alt="" width="34" height="34">
+      <span>NalarTumbuh</span>
+    </a>
+    <ul class="nav">
+      <li><a href="index.html" aria-current="page">Beranda</a></li>
+      <li><span class="nav-soon" aria-disabled="true">Materi &amp; Tutor Nalar <small>Segera</small></span></li>
+      <li><span class="nav-soon" aria-disabled="true">Refleksi Saya <small>Segera</small></span></li>
+    </ul>
+    <div class="class-card">
+      <strong>Kelas IX · IPA</strong>
+      <span id="sekolah-label">Sekolah belum diisi</span>
+      <button type="button" class="link-btn" id="ubah-profil">Ubah profil</button>
+    </div>
+  </nav>
+
+  <main class="main" id="konten">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" id="tanggal"></p>
+        <h1>Halo, <span id="nama-siswa">Siswa</span>!</h1>
+        <p class="lead">Hari ini kita belajar berpikir seperti ilmuwan: amati dulu, baru simpulkan.</p>
+      </div>
+      <label class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="sr-only">Cari submateri</span>
+        <input type="search" id="cari" placeholder="Cari submateri…" autocomplete="off">
+      </label>
+    </header>
+
+    <section class="challenge" aria-labelledby="tantangan">
+      <div>
+        <span class="pill pill-accent">TANTANGAN BERPIKIR HARI INI</span>
+        <h2 id="tantangan">Mengapa kecambah yang disimpan di tempat gelap tumbuh lebih tinggi, tetapi pucat dan lemah?</h2>
+        <p>Jangan cari jawabannya dulu. Tutor Nalar akan menemanimu berpikir langkah demi langkah.</p>
+      </div>
+      <span class="btn btn-accent is-disabled" aria-disabled="true">Segera hadir di Modul 2</span>
+    </section>
+
+    <section aria-labelledby="sub" class="stack">
+      <h2 id="sub" class="section-title">Submateri</h2>
+      <p class="empty" id="kosong" hidden>Tidak ada submateri yang cocok dengan pencarianmu.</p>
+      <div class="cards" id="daftar-submateri"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="alur">
+      <h2 id="alur" class="section-title-sm">Cara Tutor Nalar membimbingmu</h2>
+      <ol class="steps" id="langkah"></ol>
+    </section>
+
+    <footer class="foot">Media penelitian skripsi · Pengaruh Media IPA Berbasis LLM-CoT dalam Meningkatkan Critical Thinking Siswa SMP</footer>
+  </main>
+</div>
+
+<dialog id="profil-dialog" aria-labelledby="profil-judul">
+  <form method="dialog" id="profil-form">
+    <h2 id="profil-judul">Kenalan dulu, yuk!</h2>
+    <p>Namamu dipakai untuk menyapamu dan tersimpan di perangkat ini saja.</p>
+    <label for="f-nama">Nama panggilan</label>
+    <input id="f-nama" name="nama" required maxlength="40" autocomplete="given-name">
+    <label for="f-absen">Nomor absen</label>
+    <input id="f-absen" name="absen" inputmode="numeric" maxlength="3">
+    <label for="f-sekolah">Nama sekolah</label>
+    <input id="f-sekolah" name="sekolah" maxlength="60">
+    <button type="submit" class="btn btn-primary">Simpan &amp; mulai</button>
+  </form>
+</dialog>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
