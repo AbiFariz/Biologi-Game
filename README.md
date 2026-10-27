@@ -51,7 +51,7 @@ Repo → **Settings → Secrets and variables → Actions → New repository sec
 | `FTP_SERVER` | host FTP dari cPanel → FTP Accounts → *Configure FTP Client* |
 | `FTP_USERNAME` | akun FTP khusus (disarankan dibatasi ke folder subdomain) |
 | `FTP_PASSWORD` | kata sandi akun FTP tersebut |
-| `FTP_SERVER_DIR` | opsional, folder tujuan diakhiri `/`; kosongkan bila akun FTP sudah langsung ke folder subdomain |
+| `FTP_SERVER_DIR` | **wajib**: folder subdomain, mis. `/detektifsains.speakverse.id`. Deploy menolak folder akar/home demi keamanan |
 
 Setelah diisi, jalankan ulang lewat tab **Actions → Deploy ke cPanel → Run workflow**. Jika koneksi FTPS ditolak server, ubah `protocol: ftps` menjadi `ftp` di `.github/workflows/deploy.yml`.
 

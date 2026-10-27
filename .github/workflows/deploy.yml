@@ -57,9 +57,19 @@ jobs:
           echo "  ✓ alamat server ditemukan di DNS"
           echo "FTP_HOST=$host" >> "$GITHUB_ENV"
 
+          # PENGAMAN: hanya boleh mengunggah ke folder subdomain, tidak pernah ke folder home/akar.
           dir="$(printf '%s' "$RAW_DIR" | tr -d '[:space:]')"
-          [ -z "$dir" ] && dir="/"
-          echo "FTP_DIR=$dir" >> "$GITHUB_ENV"
+          dir="${dir%/}"
+          case "$dir" in
+            ""|"/"|"."|"./"|"~"|"/public_html"|"public_html")
+              echo "::error::FTP_SERVER_DIR belum diisi atau menunjuk ke folder akar. Isi dengan folder subdomain, contoh: /detektifsains.speakverse.id"
+              exit 1;;
+          esac
+          case "$dir" in
+            *detektifsains*) ;;
+            *) echo "::error::FTP_SERVER_DIR harus folder subdomain detektifsains (contoh: /detektifsains.speakverse.id). Deploy dihentikan demi keamanan."; exit 1;;
+          esac
+          echo "FTP_DIR=$dir/" >> "$GITHUB_ENV"
 
       - name: Pasang lftp
         if: env.RAW_SERVER != ''
@@ -89,16 +99,13 @@ jobs:
           fi
 
           # Izin standar cPanel: folder 755, file 644. Tidak menggagalkan deploy bila ditolak.
-          for d in . assets assets/css assets/js assets/img; do
+          for d in assets assets/css assets/js assets/img; do
             lf $TLS "cd $FTP_DIR; chmod 755 $d" >/dev/null 2>&1 || echo "::warning title=chmod ditolak::folder $d"
           done
           for f in index.html .htaccess assets/css/style.css assets/js/app.js assets/js/data.js assets/img/logo.svg assets/img/logo-white.svg; do
             lf $TLS "cd $FTP_DIR; chmod 644 $f" >/dev/null 2>&1 || echo "::warning title=chmod ditolak::file $f"
           done
 
-          # Laporan folder tujuan
-          lf $TLS "cd $FTP_DIR; pwd; cls -la --sort=name" > laporan.txt 2>&1 || true
-          echo "::notice title=Folder tujuan di server::$(head -1 laporan.txt)"
-          echo "::notice title=Isi folder tujuan::$(tail -n +2 laporan.txt | awk '{print $1, $NF}' | tr '\n' ';' )"
-          lf $TLS "cls -la --sort=name /" > akar.txt 2>&1 || true
-          echo "::notice title=Isi folder akar akun FTP::$(awk '{print $1, $NF}' akar.txt | tr '\n' ';' )"
+          # Laporan singkat: folder tujuan dan jumlah berkas (tanpa menampilkan isi folder lain)
+          lf $TLS "cd $FTP_DIR; pwd" > laporan.txt 2>&1 || true
+          echo "::notice title=Terkirim ke folder::$(tail -1 laporan.txt | sed 's#.*://[^/]*##')"
