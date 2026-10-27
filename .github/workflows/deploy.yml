@@ -3,11 +3,11 @@
 #
 # Kredensial TIDAK disimpan di repo. Isi sendiri di GitHub:
 #   Settings → Secrets and variables → Actions → New repository secret
-#     FTP_SERVER      contoh: ftp.speakverse.id  (lihat cPanel → FTP Accounts → Configure FTP Client)
+#     FTP_SERVER      contoh: veleta.id.rapidplex.com (atau IP server dari cPanel)
 #     FTP_USERNAME    akun FTP khusus yang dibatasi ke folder subdomain
 #     FTP_PASSWORD    kata sandi akun FTP tersebut
-#     FTP_SERVER_DIR  (opsional) folder tujuan di server, diakhiri "/". Kosongkan bila
-#                     akun FTP sudah langsung mengarah ke folder subdomain.
+#     FTP_SERVER_DIR  (opsional) folder tujuan di server. Kosongkan bila akun FTP
+#                     sudah langsung mengarah ke folder subdomain.
 # Selama secrets belum diisi, langkah deploy dilewati (workflow tetap hijau).
 
 name: Deploy ke cPanel
@@ -25,28 +25,65 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+      RAW_SERVER: ${{ secrets.FTP_SERVER }}
+      FTP_USER: ${{ secrets.FTP_USERNAME }}
+      FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+      RAW_DIR: ${{ secrets.FTP_SERVER_DIR }}
     steps:
       - name: Ambil kode
         uses: actions/checkout@v4
 
       - name: Lewati bila secrets belum diisi
-        if: env.FTP_SERVER == ''
+        if: env.RAW_SERVER == ''
         run: echo "::notice::Secrets FTP belum diisi — deploy ke cPanel dilewati."
 
-      - name: Unggah ke cPanel via FTPS
-        if: env.FTP_SERVER != ''
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          port: 21
-          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
-          exclude: |
-            **/.git*
-            **/.git*/**
-            .github/**
-            README.md
-            docs/**
+      - name: Periksa alamat server FTP
+        if: env.RAW_SERVER != ''
+        run: |
+          raw="$RAW_SERVER"
+          echo "Pemeriksaan isi secret FTP_SERVER (isinya tetap disembunyikan):"
+          case "$raw" in *"://"*) echo "  - mengandung awalan seperti https:// atau ftp://  → dibuang otomatis";; esac
+          case "$raw" in *" "*|*$'\t'*|*$'\n'*|*$'\r'*) echo "  - mengandung spasi/baris baru → dibuang otomatis";; esac
+          case "$raw" in *"/"*) echo "  - mengandung garis miring / → bagian setelahnya dibuang";; esac
+          host="$(printf '%s' "$raw" | tr -d '[:space:]')"
+          host="${host#*://}"; host="${host%%/*}"; host="${host%%:*}"; host="${host#*@}"
+          if [ -z "$host" ]; then
+            echo "::error::FTP_SERVER kosong setelah dibersihkan. Isi dengan alamat seperti veleta.id.rapidplex.com"; exit 1
+          fi
+          if ! getent hosts "$host" >/dev/null; then
+            echo "::error::Alamat di FTP_SERVER tidak ditemukan di internet (DNS). Ganti isinya dengan veleta.id.rapidplex.com atau IP server dari cPanel (Shared IP Address)."
+            exit 1
+          fi
+          echo "  ✓ alamat server ditemukan di DNS"
+          echo "FTP_HOST=$host" >> "$GITHUB_ENV"
+
+          dir="$(printf '%s' "$RAW_DIR" | tr -d '[:space:]')"
+          [ -z "$dir" ] && dir="/"
+          echo "FTP_DIR=$dir" >> "$GITHUB_ENV"
+
+      - name: Pasang lftp
+        if: env.RAW_SERVER != ''
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp >/dev/null
+
+      - name: Unggah ke cPanel
+        if: env.RAW_SERVER != ''
+        run: |
+          set -e
+          try_upload () {
+            lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -e "
+              set net:timeout 20; set net:max-retries 2; set net:reconnect-interval-base 5;
+              set ftp:passive-mode on;
+              set ftp:ssl-allow $1; set ftp:ssl-force $1; set ssl:check-hostname no;
+              mirror --reverse --verbose=1 --parallel=4 \
+                --exclude-glob .git* --exclude .git/ --exclude .github/ \
+                --exclude-glob README.md --exclude docs/ \
+                ./ \"$FTP_DIR\";
+              bye"
+          }
+          echo "Mencoba koneksi aman (FTPS)…"
+          if try_upload true; then
+            echo "✓ Terkirim lewat FTPS"
+          else
+            echo "::warning::FTPS gagal, mencoba FTP biasa…"
+            try_upload false && echo "✓ Terkirim lewat FTP"
+          fi
