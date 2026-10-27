@@ -87,7 +87,7 @@ jobs:
               $2; bye"
           }
           MIRROR="mirror --reverse --no-perms --verbose=1 --parallel=4 \
-            --exclude-glob .git --exclude-glob .gitignore --exclude .git/ --exclude .github/ \
+            --exclude-glob .git --exclude-glob .gitignore --exclude-glob .htaccess --exclude-glob .user.ini --exclude-glob php.ini --exclude .git/ --exclude .github/ \
             --exclude-glob README.md --exclude docs/ ./ $FTP_DIR"
 
           echo "Mencoba koneksi aman (FTPS)…"
