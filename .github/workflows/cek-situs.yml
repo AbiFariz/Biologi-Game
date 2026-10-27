@@ -13,9 +13,9 @@ jobs:
           for h in detektifsains.speakverse.id math.speakverse.id veleta.id.rapidplex.com; do
             echo "::notice title=DNS $h::$(getent ahostsv4 $h | awk '{print $1}' | sort -u | tr '\n' ' ')"
           done
-          for u in / /index.html /materi.html /assets/css/style.css /api/tutor.php?status=1 /README.md; do
-            r=$(curl -s -o /tmp/b -w '%{http_code} %{content_type} server=%header{server}' --max-time 20 "https://detektifsains.speakverse.id$u")
-            echo "::notice title=detektifsains$u::$r"
+          for u in /tidakada.html /tidakada.txt /assets/tidakada.html /assets/ /assets/js/data.js /assets/data/aktivitas.json /assets/img/logo.svg /api/ /.well-known/ /.htaccess /php.ini; do
+            r=$(curl -s -o /tmp/b -w '%{http_code} %{content_type}' --max-time 20 "https://detektifsains.speakverse.id$u")
+            echo "::notice title=detektifsains$u::$r $(head -c 120 /tmp/b | tr -d '\n' | sed 's/<[^>]*>//g' | cut -c1-80)"
           done
           r=$(curl -s -o /dev/null -w '%{http_code} server=%header{server}' --max-time 20 https://math.speakverse.id/)
           echo "::notice title=math /::$r"
