@@ -98,13 +98,7 @@ jobs:
             lf false "$MIRROR"; TLS=false; echo "✓ Terkirim lewat FTP"
           fi
 
-          # Izin standar cPanel: folder 755, file 644. Tidak menggagalkan deploy bila ditolak.
-          for d in assets assets/css assets/js assets/img; do
-            lf $TLS "cd $FTP_DIR; chmod 755 $d" >/dev/null 2>&1 || echo "::warning title=chmod ditolak::folder $d"
-          done
-          for f in index.html .htaccess assets/css/style.css assets/js/app.js assets/js/data.js assets/img/logo.svg assets/img/logo-white.svg; do
-            lf $TLS "cd $FTP_DIR; chmod 644 $f" >/dev/null 2>&1 || echo "::warning title=chmod ditolak::file $f"
-          done
+          # Izin mengikuti bawaan server (--no-perms): folder 755, file 644.
 
           # Laporan singkat: folder tujuan dan jumlah berkas (tanpa menampilkan isi folder lain)
           lf $TLS "cd $FTP_DIR; pwd" > laporan.txt 2>&1 || true

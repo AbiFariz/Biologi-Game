@@ -1,0 +1,90 @@
+{
+  "versi": 1,
+  "submateri": {
+    "tumbuhan": {
+      "judul": "Pertumbuhan Tumbuhan",
+      "aktivitas": [
+        {
+          "id": "t1",
+          "no": 1,
+          "judul": "Biji di Kapas Basah dan Kering",
+          "fenomena": "Dimas meletakkan 10 biji kacang hijau di atas kapas basah dalam cawan A, dan 10 biji lainnya di atas kapas kering dalam cawan B. Kedua cawan disimpan di tempat yang sama, di suhu ruang dan tidak terkena cahaya matahari langsung. Setelah 3 hari, 9 biji di cawan A berkecambah, sedangkan di cawan B tidak ada satu pun yang berkecambah.",
+          "gambar": [
+            { "jenis": "kapas-basah", "label": "Cawan A · kapas basah", "keterangan": "9 dari 10 biji berkecambah", "alt": "Cawan berisi kapas basah dengan sembilan biji yang sudah berkecambah dan satu biji yang tidak tumbuh" },
+            { "jenis": "kapas-kering", "label": "Cawan B · kapas kering", "keterangan": "0 dari 10 biji berkecambah", "alt": "Cawan berisi kapas kering dengan sepuluh biji yang tidak berubah" }
+          ],
+          "pemantik": "Mengapa biji di kapas kering tidak berkecambah, padahal bijinya sama dan disimpan di tempat yang sama?",
+          "konsep": "Perkecambahan diawali imbibisi, yaitu penyerapan air oleh biji. Air melunakkan kulit biji dan mengaktifkan enzim yang mengubah cadangan makanan di kotiledon menjadi zat yang dapat dipakai embrio untuk tumbuh. Tanpa air enzim tidak aktif sehingga biji tetap dorman. Variabel bebas: ketersediaan air. Variabel kontrol: jenis biji, jumlah biji, tempat, suhu, lama waktu. Satu biji di cawan A yang tidak tumbuh bisa disebabkan biji rusak atau tidak viabel; inilah alasan percobaan memakai banyak biji, bukan satu.",
+          "istilah": ["imbibisi", "perkecambahan", "dormansi", "kotiledon", "enzim"],
+          "langkah": [
+            { "tanya": "Coba ceritakan dengan kata-katamu: apa yang berbeda dari hasil cawan A dan cawan B? Apa pertanyaan utama yang ingin kita jawab?", "petunjuk": "Bandingkan jumlah biji yang berkecambah di kedua cawan." },
+            { "tanya": "Apa saja yang dibuat sama pada kedua cawan, dan apa yang dibuat berbeda? Menurutmu, apakah percobaan Dimas cukup adil untuk dijadikan bukti?", "petunjuk": "Periksa jenis biji, jumlah biji, tempat penyimpanan, dan lama waktunya. Mana yang berbeda?" },
+            { "tanya": "Dari bukti tadi, apa kesimpulanmu tentang peran air bagi biji yang akan berkecambah? Sertakan alasanmu.", "petunjuk": "Satu-satunya yang berbeda adalah air. Apa yang terjadi bila air tidak ada?" },
+            { "tanya": "Penyerapan air oleh biji disebut imbibisi. Menurutmu, apa yang terjadi di dalam biji setelah air masuk? Lalu, ada 1 biji di cawan A yang tidak tumbuh. Apa kemungkinan penyebabnya?", "petunjuk": "Air membuat kulit biji lunak dan membangunkan enzim yang mengolah cadangan makanan di dalam biji." },
+            { "tanya": "Kalau kamu ingin tahu apakah cahaya juga diperlukan untuk perkecambahan, percobaan seperti apa yang akan kamu rancang? Apa yang dibuat sama dan apa yang dibedakan?", "petunjuk": "Ubah satu hal saja (cahaya), dan buat semua hal lain sama, termasuk airnya." }
+          ]
+        },
+        {
+          "id": "t2",
+          "no": 2,
+          "judul": "Kecambah Gelap vs Terang",
+          "fenomena": "Rani menanam biji kacang hijau di dua pot yang sama. Pot A diletakkan di dekat jendela, pot B di dalam kardus tertutup. Keduanya disiram air yang sama banyak setiap hari selama 7 hari.",
+          "gambar": [
+            { "jenis": "terang", "label": "Pot A · terang", "keterangan": "Batang pendek dan kokoh, daun hijau dan lebar", "alt": "Pot A di tempat terang: kecambah pendek, batang kokoh, daun hijau lebar" },
+            { "jenis": "gelap", "label": "Pot B · gelap", "keterangan": "Batang tinggi, kurus, pucat; daun kecil kekuningan", "alt": "Pot B di tempat gelap: kecambah tinggi, batang kurus pucat, daun kecil kekuningan" }
+          ],
+          "pemantik": "Mengapa kecambah di pot B tumbuh lebih tinggi, padahal tidak mendapat cahaya?",
+          "konsep": "Etiolasi. Auksin adalah hormon pertumbuhan yang merangsang pemanjangan sel. Cahaya menghambat kerja auksin (auksin terurai oleh cahaya), sehingga di tempat gelap auksin bekerja lebih aktif dan batang memanjang dengan cepat. Kecambah pucat karena klorofil tidak terbentuk tanpa cahaya, dan batangnya lemah karena cadangan makanan dipakai untuk memanjang tanpa ada fotosintesis. Tumbuh lebih tinggi tidak sama dengan tumbuh lebih sehat. Variabel bebas: cahaya. Variabel kontrol: jenis biji, pot, air, lama waktu.",
+          "istilah": ["etiolasi", "auksin", "klorofil", "hormon pertumbuhan"],
+          "langkah": [
+            { "tanya": "Coba amati kedua pot. Apa saja perbedaan yang kamu lihat? Apa pertanyaan utama yang perlu kita jawab?", "petunjuk": "Bandingkan tinggi batang, warna, dan ukuran daunnya." },
+            { "tanya": "Air yang diberikan sama, bijinya pun sama. Yang berbeda hanya cahaya. Menurutmu, apakah percobaan Rani ini cukup adil untuk dijadikan bukti? Apa yang membuatmu yakin?", "petunjuk": "Percobaan yang adil hanya mengubah satu hal. Periksa lagi: apakah tanah, pot, dan jumlah biji di kedua pot juga sama?" },
+            { "tanya": "Jadi, menurutmu cahaya membuat batang tumbuh lebih cepat atau justru memperlambat pemanjangan batang? Apa kesimpulanmu dan apa alasannya?", "petunjuk": "Tumbuhan punya hormon pertumbuhan bernama auksin. Cari tahu: apa yang terjadi pada auksin saat terkena cahaya?" },
+            { "tanya": "Peristiwa kecambah tumbuh cepat, tinggi, dan pucat di tempat gelap disebut etiolasi. Mengapa kecambah di pot B berwarna pucat? Apakah tumbuh lebih tinggi berarti tumbuh lebih sehat?", "petunjuk": "Pikirkan zat hijau daun (klorofil) dan apa yang dibutuhkan untuk membentuknya." },
+            { "tanya": "Bagaimana caramu menguji dugaan ini lebih lanjut? Rancang satu percobaan lanjutan, misalnya dengan cahaya yang berbeda-beda.", "petunjuk": "Coba buat beberapa pot dengan jumlah cahaya berbeda: terang penuh, redup, dan gelap. Semua hal lain dibuat sama." }
+          ]
+        },
+        {
+          "id": "t3",
+          "no": 3,
+          "judul": "Tanaman yang Membengkok ke Jendela",
+          "fenomena": "Bu Sari meletakkan pot tanaman kacang di meja dekat jendela, sehingga cahaya hanya datang dari satu sisi. Setelah 5 hari, ujung batang tanaman itu membengkok ke arah jendela. Tanaman sejenis yang diletakkan di halaman terbuka tumbuh tegak lurus ke atas.",
+          "gambar": [
+            { "jenis": "jendela", "label": "Dekat jendela", "keterangan": "Batang membengkok ke arah datangnya cahaya", "alt": "Tanaman di dekat jendela dengan batang yang membengkok ke arah cahaya dari samping" },
+            { "jenis": "halaman", "label": "Halaman terbuka", "keterangan": "Batang tumbuh tegak ke atas", "alt": "Tanaman di halaman terbuka dengan cahaya dari atas dan batang yang tumbuh tegak" }
+          ],
+          "pemantik": "Mengapa batang tanaman di dekat jendela membengkok ke arah cahaya?",
+          "konsep": "Fototropisme positif pada batang. Cahaya dari satu sisi membuat auksin berpindah dan terkumpul di sisi batang yang tidak terkena cahaya. Sel di sisi gelap memanjang lebih cepat daripada sel di sisi terang, sehingga batang membengkok ke arah cahaya. Ini berkaitan dengan aktivitas 2 (auksin bekerja lebih aktif di tempat gelap). Manfaatnya: daun mendapat lebih banyak cahaya untuk fotosintesis. Bagian yang peka cahaya adalah ujung batang (koleoptil).",
+          "istilah": ["fototropisme", "auksin", "fotosintesis"],
+          "langkah": [
+            { "tanya": "Apa perbedaan arah tumbuh kedua tanaman? Apa pertanyaan utama yang perlu kita jawab?", "petunjuk": "Perhatikan dari arah mana cahaya datang pada masing-masing tanaman." },
+            { "tanya": "Apa yang berbeda dari kondisi kedua tanaman? Adakah hal lain selain arah cahaya yang mungkin berbeda dan bisa memengaruhi hasil?", "petunjuk": "Di halaman terbuka, cahaya datang dari atas dan merata. Apakah tanah, air, dan jenis tanamannya sama?" },
+            { "tanya": "Ingat aktivitas sebelumnya: di tempat gelap batang memanjang lebih cepat. Kalau begitu, sisi batang mana yang tumbuh lebih panjang pada tanaman di dekat jendela? Apa kesimpulanmu?", "petunjuk": "Kalau satu sisi batang lebih panjang dari sisi lainnya, batang akan membengkok ke arah sisi yang lebih pendek." },
+            { "tanya": "Gerak tumbuh ke arah cahaya disebut fototropisme. Apa keuntungan fototropisme bagi tumbuhan? Asumsi apa yang kita pakai saat menjelaskannya?", "petunjuk": "Pikirkan apa yang dibutuhkan daun dari cahaya." },
+            { "tanya": "Bagaimana caramu membuktikan bahwa ujung batanglah yang peka terhadap cahaya? Rancang percobaannya.", "petunjuk": "Coba tutup bagian tertentu dari batang, misalnya hanya ujungnya, lalu bandingkan dengan tanaman yang tidak ditutup." }
+          ]
+        },
+        {
+          "id": "t4",
+          "no": 4,
+          "judul": "Biji di Kulkas dan Suhu Ruang",
+          "fenomena": "Dimas menyiapkan dua cawan berisi kapas basah, masing-masing dengan 10 biji kacang hijau. Cawan A disimpan di dalam lemari tertutup pada suhu ruang (sekitar 28 °C), sedangkan cawan B disimpan di dalam kulkas (sekitar 5 °C). Kapas di kedua cawan dijaga tetap basah. Setelah 3 hari, 9 biji di cawan A berkecambah, sedangkan di cawan B hanya 1 biji yang kulitnya mulai pecah.",
+          "gambar": [
+            { "jenis": "hangat", "label": "Cawan A · suhu ruang ±28 °C", "keterangan": "9 dari 10 biji berkecambah", "alt": "Cawan di suhu ruang dengan sembilan biji yang sudah berkecambah" },
+            { "jenis": "dingin", "label": "Cawan B · kulkas ±5 °C", "keterangan": "Hampir tidak ada yang berkecambah", "alt": "Cawan di dalam kulkas dengan biji yang hampir semuanya belum berkecambah" }
+          ],
+          "pemantik": "Mengapa biji di kulkas hampir tidak berkecambah, padahal sudah mendapat air?",
+          "konsep": "Suhu memengaruhi kerja enzim. Enzim yang mengolah cadangan makanan di dalam biji bekerja paling baik pada suhu optimum (untuk kacang hijau sekitar 25–30 °C). Pada suhu rendah kerja enzim sangat lambat sehingga perkecambahan terhambat; suhu yang terlalu tinggi juga dapat merusak enzim. Kedua cawan sama-sama gelap (lemari tertutup dan kulkas), sama-sama basah, sehingga variabel bebasnya hanya suhu. Faktor eksternal pertumbuhan: air, cahaya, suhu, oksigen, dan nutrisi.",
+          "istilah": ["enzim", "suhu optimum", "faktor eksternal"],
+          "langkah": [
+            { "tanya": "Apa perbedaan hasil kedua cawan? Apa pertanyaan utama kita?", "petunjuk": "Bandingkan jumlah biji yang berkecambah dan suhu tempat penyimpanannya." },
+            { "tanya": "Kulkas itu dingin, tapi juga gelap saat ditutup. Apakah percobaan ini adil? Apa saja yang dibuat sama pada kedua cawan?", "petunjuk": "Cawan A juga disimpan di lemari tertutup. Coba periksa: air, jenis biji, jumlah biji, dan cahaya." },
+            { "tanya": "Biji di kulkas sudah mendapat air, tapi tetap hampir tidak berkecambah. Apa kesimpulanmu tentang pengaruh suhu? Jelaskan alasannya.", "petunjuk": "Ingat aktivitas 1: setelah air masuk, ada 'pekerja' di dalam biji yang harus aktif." },
+            { "tanya": "Pekerja di dalam biji itu disebut enzim. Menurutmu, apakah semakin panas selalu semakin baik untuk perkecambahan? Apa asumsimu?", "petunjuk": "Enzim punya suhu kerja yang paling cocok (suhu optimum). Terlalu dingin atau terlalu panas sama-sama tidak baik." },
+            { "tanya": "Rancang percobaan untuk mencari suhu yang paling cocok bagi perkecambahan kacang hijau. Berapa cawan dan suhu apa saja yang akan kamu pakai?", "petunjuk": "Gunakan beberapa suhu berbeda, misalnya dingin, sedang, dan panas, dengan semua hal lain dibuat sama." }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -8,7 +8,7 @@ window.NT_DATA = {
       ikon: 'tumbuhan',
       tone: 'tone-green',
       jumlahAktivitas: 4,
-      tautan: null // diisi saat Modul 2 selesai, mis. 'materi.html?sub=tumbuhan'
+      tautan: 'materi.html?sub=tumbuhan'
     },
     {
       id: 'hewan',

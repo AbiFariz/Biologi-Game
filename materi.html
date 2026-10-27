@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Materi &amp; Tutor Nalar · Detektif Sains</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/materi.css">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+</head>
+<body class="page-materi">
+
+<header class="m-top">
+  <div class="m-top-left">
+    <a class="m-back" href="index.html">← Beranda</a>
+    <nav aria-label="Lokasi" class="m-crumb">
+      <span id="crumb-sub">Pertumbuhan Tumbuhan</span>
+      <span aria-hidden="true">›</span>
+      <strong id="crumb-akt">Memuat…</strong>
+    </nav>
+  </div>
+  <div class="m-top-right">
+    <span id="progres-teks">Aktivitas – dari –</span>
+    <div class="m-bar" aria-hidden="true"><span id="progres-bar"></span></div>
+  </div>
+</header>
+
+<nav class="m-tabs" aria-label="Pilih aktivitas" id="tab-aktivitas"></nav>
+
+<div class="m-wrap">
+  <main class="m-main" id="konten">
+    <section class="m-card" aria-labelledby="judul-fenomena">
+      <span class="m-tag">FENOMENA</span>
+      <h1 id="judul-fenomena">Memuat aktivitas…</h1>
+      <p id="teks-fenomena" class="m-text"></p>
+      <div class="m-figs" id="gambar"></div>
+    </section>
+
+    <section class="m-card" aria-labelledby="judul-tugas">
+      <h2 id="judul-tugas" class="m-h2">Pertanyaan pemantik</h2>
+      <p id="teks-pemantik" class="m-text m-strong"></p>
+      <label for="kesimpulan" class="m-label">Kesimpulanku</label>
+      <p class="m-help" id="kesimpulan-bantu">Kolom ini terbuka setelah kamu menyelesaikan 5 langkah bersama Tutor Nalar.</p>
+      <textarea id="kesimpulan" rows="4" placeholder="Tulis kesimpulanmu dengan kalimatmu sendiri, lengkap dengan alasannya…" disabled></textarea>
+      <div class="m-actions">
+        <span class="m-saved" id="tersimpan" hidden>Tersimpan ✓</span>
+        <button type="button" class="btn btn-primary" id="kirim-kesimpulan" disabled>Simpan kesimpulan &amp; lanjut</button>
+      </div>
+    </section>
+  </main>
+
+  <aside class="tutor" aria-label="Tutor Nalar">
+    <div class="tutor-head">
+      <div class="tutor-ava" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16281F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>
+      </div>
+      <div>
+        <div class="tutor-name">Kak Nala · Tutor Nalar</div>
+        <div class="tutor-sub" id="mode-tutor">Membimbing dengan pertanyaan, bukan jawaban</div>
+      </div>
+    </div>
+
+    <ol class="tutor-steps" aria-label="Langkah berpikir" id="langkah-chip"></ol>
+
+    <div class="tutor-log" id="log" role="log" aria-live="polite" aria-label="Percakapan dengan Tutor Nalar"></div>
+
+    <div class="tutor-foot">
+      <div class="tutor-quick">
+        <button type="button" class="chip-btn" data-aksi="petunjuk">Minta petunjuk</button>
+        <button type="button" class="chip-btn" data-aksi="belum_paham">Aku belum paham</button>
+        <button type="button" class="chip-btn" data-aksi="cek_alasan">Cek alasanku</button>
+      </div>
+      <form class="tutor-form" id="form-pesan" autocomplete="off">
+        <label for="pesan" class="sr-only">Tulis alasanmu</label>
+        <textarea id="pesan" rows="2" maxlength="800" placeholder="Tulis alasanmu, bukan hanya jawaban…"></textarea>
+        <button type="submit" class="send-btn" aria-label="Kirim pesan">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+    </div>
+  </aside>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/materi.js"></script>
+</body>
+</html>
