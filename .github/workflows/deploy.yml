@@ -69,21 +69,31 @@ jobs:
         if: env.RAW_SERVER != ''
         run: |
           set -e
+          # Izin standar cPanel: folder 755, file 644 (izin 777/775 bisa memicu error 500)
+          FIXPERM="chmod 755 assets assets/css assets/js assets/img; chmod 644 index.html .htaccess assets/css/* assets/js/* assets/img/*"
           try_upload () {
             lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -e "
               set net:timeout 20; set net:max-retries 2; set net:reconnect-interval-base 5;
               set ftp:passive-mode on;
               set ftp:ssl-allow $1; set ftp:ssl-force $1; set ssl:check-hostname no;
-              mirror --reverse --verbose=1 --parallel=4 \
-                --exclude-glob .git* --exclude .git/ --exclude .github/ \
+              mirror --reverse --no-perms --verbose=1 --parallel=4 \
+                --exclude-glob .git --exclude-glob .gitignore --exclude .git/ --exclude .github/ \
                 --exclude-glob README.md --exclude docs/ \
                 ./ \"$FTP_DIR\";
+              cd \"$FTP_DIR\"; $FIXPERM;
               bye"
+          }
+          report () {
+            lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -e "
+              set net:timeout 20; set ftp:ssl-allow $1; set ftp:ssl-force $1; set ssl:check-hostname no;
+              cd \"$FTP_DIR\"; pwd; cls -l --sort=name; bye" > laporan.txt 2>&1 || true
+            echo "::notice title=Folder tujuan di server::$(head -1 laporan.txt)"
+            echo "::notice title=Isi folder tujuan::$(tail -n +2 laporan.txt | awk '{print $1, $NF}' | tr '\n' ';' )"
           }
           echo "Mencoba koneksi aman (FTPS)…"
           if try_upload true; then
-            echo "✓ Terkirim lewat FTPS"
+            echo "✓ Terkirim lewat FTPS"; report true
           else
             echo "::warning::FTPS gagal, mencoba FTP biasa…"
-            try_upload false && echo "✓ Terkirim lewat FTP"
+            try_upload false && echo "✓ Terkirim lewat FTP" && report false
           fi
