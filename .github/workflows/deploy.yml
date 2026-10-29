@@ -71,6 +71,13 @@ jobs:
           esac
           echo "FTP_DIR=$dir/" >> "$GITHUB_ENV"
 
+      - name: Tandai versi aset (anti-cache browser)
+        if: env.RAW_SERVER != ''
+        run: |
+          v="${GITHUB_SHA::7}"
+          grep -rl "__VER__" --include="*.html" --include="*.js" . | xargs -r sed -i "s/__VER__/$v/g"
+          echo "Versi aset: $v"
+
       - name: Pasang lftp
         if: env.RAW_SERVER != ''
         run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp >/dev/null

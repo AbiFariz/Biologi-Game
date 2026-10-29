@@ -172,7 +172,7 @@
   });
 
   /* ---------- mulai ---------- */
-  fetch('assets/data/aktivitas.json', { cache: 'no-cache' })
+  fetch('assets/data/aktivitas.json?v=__VER__', { cache: 'no-cache' })
     .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
     .then(function (data) {
       Object.keys(data.submateri).forEach(function (sub) {

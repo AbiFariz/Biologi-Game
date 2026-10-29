@@ -229,6 +229,18 @@
   }
 
   /* ---------- tampilan ---------- */
+  function renderSubmateri() {
+    var nav = $('tab-submateri'); nav.textContent = '';
+    window.NT_DATA.submateri.forEach(function (s) {
+      var a = document.createElement('a');
+      a.className = 'm-sub';
+      a.href = 'materi.html?sub=' + encodeURIComponent(s.id);
+      a.textContent = s.judul;
+      if (s.id === subId) a.setAttribute('aria-current', 'page');
+      nav.appendChild(a);
+    });
+  }
+
   function renderTabs() {
     var nav = $('tab-aktivitas'); nav.textContent = '';
     dataSub.aktivitas.forEach(function (a) {
@@ -443,7 +455,7 @@
   /* ---------- muat aktivitas ---------- */
   function mulaiAktivitas() {
     st = baca(kunciAkt(akt.id), null) || stateAwal();
-    renderHeader(); renderTabs();
+    renderHeader(); renderSubmateri(); renderTabs();
     $('judul-fenomena').textContent = akt.judul;
     $('teks-fenomena').textContent = akt.fenomena;
     $('teks-pemantik').textContent = akt.pemantik;
@@ -483,7 +495,7 @@
   });
 
   /* ---------- mulai ---------- */
-  fetch('assets/data/aktivitas.json', { cache: 'no-cache' })
+  fetch('assets/data/aktivitas.json?v=__VER__', { cache: 'no-cache' })
     .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
     .then(function (data) {
       dataSub = data.submateri[subId];
