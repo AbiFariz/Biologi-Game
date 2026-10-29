@@ -17,7 +17,7 @@ window.NT_DATA = {
       ikon: 'hewan',
       tone: 'tone-amber',
       jumlahAktivitas: 4,
-      tautan: null
+      tautan: 'materi.html?sub=hewan'
     },
     {
       id: 'manusia',
@@ -26,7 +26,7 @@ window.NT_DATA = {
       ikon: 'manusia',
       tone: 'tone-blue',
       jumlahAktivitas: 4,
-      tautan: null
+      tautan: 'materi.html?sub=manusia'
     }
   ],
 

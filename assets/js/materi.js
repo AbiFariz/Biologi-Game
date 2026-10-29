@@ -51,6 +51,31 @@
   }
   var POS = [[38, 92], [52, 88], [66, 94], [80, 89], [94, 93], [108, 88], [46, 99], [62, 101], [88, 100], [104, 99]];
 
+  function batang(nilai, label, maks, warna, akhiran) {
+    var n = nilai.length, lebar = 120 / n, s = '<path d="M14 100 H140" stroke="#7B8E99" stroke-width="1.5"/>';
+    nilai.forEach(function (v, i) {
+      var h = Math.round(v / maks * 80), x = 16 + i * lebar + lebar * 0.15, w = lebar * 0.7;
+      s += '<rect x="' + x.toFixed(1) + '" y="' + (100 - h) + '" width="' + w.toFixed(1) + '" height="' + h + '" rx="2" fill="' + warna + '"/>' +
+        '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (96 - h) + '" font-size="9" font-weight="700" text-anchor="middle" fill="#16281F">' + String(v).replace('.', ',') + '</text>' +
+        '<text x="' + (x + w / 2).toFixed(1) + '" y="113" font-size="9" text-anchor="middle" fill="#34443B">' + label[i] + '</text>';
+    });
+    if (akhiran) s += '<text x="140" y="125" font-size="8" text-anchor="end" fill="#4F5F56">usia (' + akhiran + ')</text>';
+    return s;
+  }
+  function balita(tinggi, stunting) {
+    var h = Math.round(tinggi * 0.95);
+    var s = '<path d="M30 112 H120" stroke="#7B8E99" stroke-width="1.5"/>' +
+      '<rect x="36" y="' + (112 - h) + '" width="10" height="' + h + '" rx="2" fill="#E8A33D"/>' +
+      '<text x="41" y="' + (106 - h) + '" font-size="10" font-weight="700" text-anchor="middle" fill="#16281F">' + tinggi + ' cm</text>' +
+      '<g fill="#5B8FB9"><circle cx="70" cy="' + (112 - h + 8) + '" r="8"/><path d="M60 ' + (112 - h + 18) + ' h20 l-2 ' + (h - 40) + ' h-4 l-1 22 h-6 l-1 -22 h-4 z"/></g>';
+    var sudut = stunting / 100 * 2 * Math.PI, cx = 112, cy = 58, r = 16;
+    var x = cx + r * Math.sin(sudut), y = cy - r * Math.cos(sudut);
+    s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#DCE3DE"/>' +
+      '<path d="M' + cx + ' ' + cy + ' L' + cx + ' ' + (cy - r) + ' A' + r + ' ' + r + ' 0 ' + (stunting > 50 ? 1 : 0) + ' 1 ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' Z" fill="#D9573B"/>' +
+      '<text x="' + cx + '" y="' + (cy + 30) + '" font-size="9" text-anchor="middle" fill="#16281F">stunting ' + stunting + '%</text>';
+    return s;
+  }
+
   var GAMBAR = {
     terang: function () {
       return '<circle cx="128" cy="20" r="12" fill="#F2C14E"/><path d="M75 100 V62" stroke="#3C8A5A" stroke-width="5" stroke-linecap="round"/>' +
@@ -93,8 +118,101 @@
         '<path d="M75 52 C62 40 48 44 46 51 C58 58 68 56 75 52 Z" fill="#3C8A5A"/><path d="M75 52 C88 40 102 44 104 51 C92 58 82 56 75 52 Z" fill="#3C8A5A"/>' +
         '<path d="M75 76 C85 68 95 70 96 75 C88 81 81 80 75 76 Z" fill="#3C8A5A"/>' + POT;
     }
+    ,
+    /* ---------- Metamorfosis Hewan ---------- */
+    ulat: function () {
+      var s = '<path d="M10 104 C40 92 70 96 140 86" stroke="#7A5A3A" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+        '<path d="M96 88 C104 60 130 52 142 62 C134 78 116 88 96 88 Z" fill="#5FA052"/><path d="M98 87 C112 74 126 66 140 63" stroke="#3C7A3A" stroke-width="1.5" fill="none"/>';
+      for (var i = 0; i < 7; i++) s += '<circle cx="' + (26 + i * 10) + '" cy="' + (88 - Math.sin(i / 2) * 6) + '" r="7" fill="#8CC152" stroke="#5E9B4F" stroke-width="1.2"/>';
+      return s + '<circle cx="96" cy="80" r="7.5" fill="#6FA845"/><circle cx="99" cy="78" r="1.6" fill="#16281F"/>' +
+        '<path d="M95 73 l-3 -7 M99 73 l2 -7" stroke="#16281F" stroke-width="1.4" stroke-linecap="round"/>';
+    },
+    kupukupu: function () {
+      return '<path d="M118 120 V82" stroke="#3C8A5A" stroke-width="3"/><circle cx="118" cy="76" r="9" fill="#E86A92"/><circle cx="118" cy="76" r="3.5" fill="#F2C14E"/>' +
+        '<path d="M60 58 C34 20 14 34 22 56 C28 68 48 66 60 58 Z" fill="#E8A33D"/><path d="M60 58 C86 20 106 34 98 56 C92 68 72 66 60 58 Z" fill="#E8A33D"/>' +
+        '<path d="M60 62 C40 70 34 90 46 92 C56 92 60 76 60 62 Z" fill="#D9573B"/><path d="M60 62 C80 70 86 90 74 92 C64 92 60 76 60 62 Z" fill="#D9573B"/>' +
+        '<circle cx="34" cy="46" r="4" fill="#16281F"/><circle cx="86" cy="46" r="4" fill="#16281F"/>' +
+        '<rect x="57.5" y="44" width="5" height="40" rx="2.5" fill="#3A2A1A"/><path d="M59 44 q-6 -12 -12 -14 M61 44 q6 -12 12 -14" stroke="#3A2A1A" stroke-width="1.5" fill="none" stroke-linecap="round"/>';
+    },
+    berudu: function () {
+      return '<rect x="6" y="20" width="138" height="100" rx="8" fill="#CFE6F2"/><path d="M6 34 q17 -6 34 0 t34 0 t34 0 t36 0" stroke="#9CC3E0" stroke-width="2" fill="none"/>' +
+        '<ellipse cx="62" cy="74" rx="18" ry="13" fill="#4A5A3A"/><circle cx="54" cy="70" r="2.4" fill="#fff"/><circle cx="54" cy="70" r="1.2" fill="#16281F"/>' +
+        '<path d="M78 74 C96 64 108 84 128 70 C112 90 96 82 79 79 Z" fill="#6B7A55"/>' +
+        '<g fill="#BFDDEB"><circle cx="40" cy="56" r="2.5"/><circle cx="36" cy="46" r="1.8"/></g>';
+    },
+    katak: function () {
+      return '<rect x="6" y="88" width="138" height="34" rx="6" fill="#CFE6F2"/><path d="M30 96 C40 70 110 70 120 96 Z" fill="#9AA3A8"/>' +
+        '<ellipse cx="75" cy="66" rx="24" ry="15" fill="#5E9B4F"/><circle cx="62" cy="52" r="7" fill="#5E9B4F"/><circle cx="88" cy="52" r="7" fill="#5E9B4F"/>' +
+        '<circle cx="62" cy="51" r="3.2" fill="#fff"/><circle cx="62" cy="51" r="1.6" fill="#16281F"/><circle cx="88" cy="51" r="3.2" fill="#fff"/><circle cx="88" cy="51" r="1.6" fill="#16281F"/>' +
+        '<path d="M66 72 q9 5 18 0" stroke="#2F5E2A" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
+        '<path d="M52 74 q-10 10 -4 16 h10 M98 74 q10 10 4 16 h-10 M64 80 l-4 10 M86 80 l4 10" stroke="#3C7A3A" stroke-width="4" fill="none" stroke-linecap="round"/>';
+    },
+    nimfa: function () {
+      return '<path d="M8 104 C50 90 100 94 142 100" stroke="#5E9B4F" stroke-width="10" fill="none" stroke-linecap="round"/>' +
+        '<ellipse cx="72" cy="80" rx="20" ry="7" fill="#9BBF4A"/><ellipse cx="50" cy="76" rx="8" ry="7" fill="#9BBF4A"/><circle cx="47" cy="74" r="1.8" fill="#16281F"/>' +
+        '<path d="M46 70 q-8 -16 -18 -18 M50 69 q-4 -16 -10 -22" stroke="#6B8A2A" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
+        '<path d="M80 78 L98 62 L104 88 M70 84 l-4 10 M60 84 l-6 9" stroke="#6B8A2A" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="M64 74 q8 -4 14 0" stroke="#7AA03A" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    },
+    belalang: function () {
+      return '<path d="M8 110 C50 96 100 100 142 106" stroke="#5E9B4F" stroke-width="10" fill="none" stroke-linecap="round"/>' +
+        '<ellipse cx="78" cy="74" rx="38" ry="11" fill="#7FA83A"/><ellipse cx="38" cy="70" rx="12" ry="11" fill="#7FA83A"/><circle cx="34" cy="67" r="2.6" fill="#16281F"/>' +
+        '<path d="M50 68 C78 46 112 50 122 66 C100 70 74 72 50 68 Z" fill="#A9C46A" stroke="#6B8A2A" stroke-width="1.2"/>' +
+        '<path d="M32 60 q-10 -22 -24 -26 M37 59 q-4 -24 -14 -32" stroke="#6B8A2A" stroke-width="1.5" fill="none" stroke-linecap="round"/>' +
+        '<path d="M92 80 L118 52 L128 100 M66 84 l-6 18 M52 82 l-10 16" stroke="#5E7A2A" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    },
+    'ember-terbuka': function () {
+      var s = '<path d="M34 44 L42 122 H108 L116 44 Z" fill="#5B8FB9"/><ellipse cx="75" cy="44" rx="41" ry="8" fill="#3E6E93"/><ellipse cx="75" cy="47" rx="36" ry="5.5" fill="#9CC3E0"/>' +
+        '<path d="M48 64 L102 64 L98 116 H52 Z" fill="#9CC3E0" opacity=".55"/>';
+      [[56, 74], [70, 86], [88, 72], [62, 100], [92, 96], [78, 108]].forEach(function (p) {
+        s += '<path d="M' + p[0] + ' ' + p[1] + ' q3 4 0 8 q-3 4 0 8" stroke="#3A3A2A" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+      });
+      s += '<path d="M80 84 a4 4 0 1 1 6 4 q-2 2 -1 5" stroke="#3A3A2A" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+      return s + '<g stroke="#3A3A2A" stroke-width="1.2" stroke-linecap="round"><path d="M104 22 l12 -4"/><path d="M110 21 l-6 -8 M110 21 l8 -10"/><path d="M106 22 l-4 6 M110 22 l0 7 M114 21 l4 6"/></g>';
+    },
+    'ember-tertutup': function () {
+      return '<path d="M34 44 L42 122 H108 L116 44 Z" fill="#5B8FB9"/><rect x="28" y="34" width="94" height="12" rx="5" fill="#2F5674"/><rect x="66" y="26" width="18" height="9" rx="3" fill="#2F5674"/>' +
+        '<path d="M48 64 L102 64 L98 116 H52 Z" fill="#9CC3E0" opacity=".55"/>';
+    },
+    /* ---------- Pertumbuhan Manusia ---------- */
+    'grafik-tinggi': function () {
+      return batang([75, 95, 115, 132, 148, 162], ['1', '3', '6', '9', '12', '14'], 170, '#2E7D5B', 'th');
+    },
+    'grafik-laju': function () {
+      return batang([10, 6.7, 5.7, 5.3, 7], ['1–3', '3–6', '6–9', '9–12', '12–14'], 11, '#E8A33D', '');
+    },
+    'desa-a': function () { return balita(86, 12); },
+    'desa-b': function () { return balita(82, 27); },
+    'pubertas-fisik': function () {
+      return '<g fill="#5B8FB9"><circle cx="50" cy="38" r="9"/><path d="M38 52 h24 l-3 36 h-4 l-2 28 h-6 l-2 -28 h-4 z"/></g>' +
+        '<g fill="#E86A92"><circle cx="98" cy="44" r="8.5"/><path d="M86 57 h24 l6 32 h-8 l-1 26 h-6 l-1 -26 h-1 l-1 26 h-6 l-1 -26 h-8 z"/></g>' +
+        '<path d="M130 116 V24 M124 32 l6 -8 l6 8" stroke="#2E7D5B" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<g stroke="#2E7D5B" stroke-width="1.5"><path d="M126 56 h8 M126 76 h8 M126 96 h8"/></g>';
+    },
+    'pubertas-emosi': function () {
+      return '<path d="M18 22 h70 a10 10 0 0 1 10 10 v26 a10 10 0 0 1 -10 10 h-46 l-14 12 v-12 h-10 a10 10 0 0 1 -10 -10 v-26 a10 10 0 0 1 10 -10 z" fill="#fff" stroke="#5B8FB9" stroke-width="2"/>' +
+        '<g stroke="#5B8FB9" stroke-width="3" stroke-linecap="round"><path d="M28 38 h48 M28 50 h32"/></g>' +
+        '<path d="M106 88 c-10 -14 -30 -4 -18 12 l18 18 l18 -18 c12 -16 -8 -26 -18 -12 z" fill="#E86A92"/>' +
+        '<path d="M120 26 l4 8 l8 1 l-6 6 l2 8 l-8 -4 l-8 4 l2 -8 l-6 -6 l8 -1 z" fill="#F2C14E"/>';
+    },
+    'berat-bayi': function () {
+      return batang([3.2, 9.5], ['Lahir', '13 bl'], 11, '#2E7D5B', '');
+    },
+    'gerak-bayi': function () {
+      var titik = [[22, '4'], [56, '7'], [90, '9'], [124, '13']];
+      var s = '<path d="M14 92 H134" stroke="#7B8E99" stroke-width="2"/>';
+      titik.forEach(function (t) {
+        s += '<circle cx="' + t[0] + '" cy="92" r="4" fill="#2E7D5B"/><text x="' + t[0] + '" y="110" font-size="10" text-anchor="middle" fill="#34443B">' + t[1] + ' bl</text>';
+      });
+      s += '<g fill="#B5643A">' +
+        '<ellipse cx="22" cy="76" rx="12" ry="4.5"/><circle cx="12" cy="68" r="5"/>' +
+        '<circle cx="56" cy="52" r="5"/><path d="M50 60 h12 l2 18 h-16 z"/><ellipse cx="56" cy="80" rx="12" ry="3"/>' +
+        '<circle cx="80" cy="62" r="5"/><path d="M84 66 h14 l4 12 h-4 l-2 -6 h-8 l-2 6 h-4 z"/>' +
+        '<circle cx="124" cy="40" r="5"/><path d="M119 48 h10 l1 16 h-3 l-1 16 h-2 l-1 -16 h-1 l-1 16 h-2 l-1 -16 h-3 z"/></g>';
+      return s;
+    }
   };
-  var HANGAT = { terang: 1, 'kapas-basah': 1, hangat: 1, halaman: 1, jendela: 1 };
+  var HANGAT = { terang: 1, 'kapas-basah': 1, hangat: 1, halaman: 1, jendela: 1, ulat: 1, kupukupu: 1, nimfa: 1, belalang: 1, 'ember-terbuka': 1, 'grafik-tinggi': 1, 'desa-a': 1, 'pubertas-fisik': 1, 'berat-bayi': 1 };
 
   function renderGambar() {
     var w = $('gambar'); w.textContent = '';
