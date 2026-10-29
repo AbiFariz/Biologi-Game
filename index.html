@@ -45,13 +45,17 @@
       </label>
     </header>
 
-    <section class="challenge" aria-labelledby="tantangan">
+    <section class="challenge" aria-labelledby="lanjut-judul">
       <div>
-        <span class="pill pill-accent">TANTANGAN BERPIKIR HARI INI</span>
-        <h2 id="tantangan">Mengapa kecambah yang disimpan di tempat gelap tumbuh lebih tinggi, tetapi pucat dan lemah?</h2>
-        <p>Jangan cari jawabannya dulu. Tutor Nalar akan menemanimu berpikir langkah demi langkah.</p>
+        <span class="pill pill-accent" id="lanjut-label">MULAI PENYELIDIKANMU</span>
+        <h2 id="lanjut-judul">Pilih submateri di bawah, atau mulai dari aktivitas pertama.</h2>
+        <p id="lanjut-teks">Setiap aktivitas berisi satu fenomena. Tutor Nalar akan menemanimu berpikir langkah demi langkah.</p>
+        <div class="lanjut-progres" id="lanjut-progres" hidden>
+          <div class="bar"><span id="lanjut-bar"></span></div>
+          <span id="lanjut-angka"></span>
+        </div>
       </div>
-      <a class="btn btn-accent" href="materi.html?sub=tumbuhan&amp;a=t2">Mulai berpikir →</a>
+      <a class="btn btn-accent" id="lanjut-btn" href="materi.html?sub=tumbuhan&amp;a=t1">Mulai →</a>
     </section>
 
     <section aria-labelledby="sub" class="stack">

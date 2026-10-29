@@ -138,11 +138,62 @@
     if (!profil || !profil.nama) buka();
   }
 
+  /* ---------- kartu "lanjutkan belajar" ---------- */
+  function renderLanjut() {
+    fetch('assets/data/aktivitas.json?v=__VER__', { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+      .then(function (d) {
+        var semua = [];
+        data.submateri.forEach(function (s) {
+          var isi = d.submateri[s.id];
+          if (!isi) return;
+          isi.aktivitas.forEach(function (a) { semua.push({ sub: s.id, subJudul: isi.judul, akt: a, st: baca('nt_aktivitas_' + a.id, null) }); });
+        });
+        if (!semua.length) return;
+        var selesai = semua.filter(function (x) { return x.st && x.st.selesai; }).length;
+        var berjalan = semua.filter(function (x) { return x.st && !x.st.selesai && x.st.pesan && x.st.pesan.length > 1; })[0];
+        var berikut = berjalan || semua.filter(function (x) { return !(x.st && x.st.selesai); })[0];
+        var label = document.getElementById('lanjut-label'), judul = document.getElementById('lanjut-judul'),
+            teks = document.getElementById('lanjut-teks'), btn = document.getElementById('lanjut-btn');
+
+        if (selesai > 0 || berjalan) {
+          document.getElementById('lanjut-progres').hidden = false;
+          document.getElementById('lanjut-bar').style.width = Math.round(selesai / semua.length * 100) + '%';
+          document.getElementById('lanjut-angka').textContent = selesai + ' dari ' + semua.length + ' aktivitas selesai';
+        }
+        if (!berikut) {
+          label.textContent = 'SEMUA AKTIVITAS SELESAI';
+          judul.textContent = 'Hebat! Kamu sudah menyelesaikan semua penyelidikan.';
+          teks.textContent = 'Lihat bagaimana kemampuan berpikir kritismu berkembang dari aktivitas ke aktivitas.';
+          btn.textContent = 'Lihat refleksiku →';
+          btn.href = 'refleksi.html';
+          return;
+        }
+        btn.href = 'materi.html?sub=' + encodeURIComponent(berikut.sub) + '&a=' + encodeURIComponent(berikut.akt.id);
+        if (berjalan) {
+          label.textContent = 'LANJUTKAN PENYELIDIKAN';
+          teks.textContent = 'Kamu berhenti di langkah ' + (berjalan.st.langkah || 1) + ' dari 5. Yuk, lanjutkan berpikir bersama Tutor Nalar.';
+          btn.textContent = 'Lanjutkan →';
+        } else if (selesai > 0) {
+          label.textContent = 'AKTIVITAS BERIKUTNYA';
+          teks.textContent = 'Amati fenomenanya dulu, lalu diskusikan alasanmu bersama Tutor Nalar.';
+          btn.textContent = 'Mulai →';
+        } else {
+          label.textContent = 'MULAI PENYELIDIKANMU';
+          teks.textContent = 'Pilih submateri di bawah, atau mulai dari aktivitas pertama ini.';
+          btn.textContent = 'Mulai →';
+        }
+        judul.textContent = berikut.subJudul + ' · Aktivitas ' + berikut.akt.no + ': ' + berikut.akt.judul;
+      })
+      .catch(function () { /* biarkan isi bawaan */ });
+  }
+
   /* ---------- mulai ---------- */
   tampilTanggal();
   renderSubmateri('');
   renderLangkah();
   siapkanProfil();
+  renderLanjut();
   document.getElementById('cari').addEventListener('input', function (e) {
     renderSubmateri(e.target.value);
   });

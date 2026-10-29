@@ -102,6 +102,9 @@ h1 { margin: 0; font-size: clamp(26px, 4vw, 32px); font-weight: 800; letter-spac
 .challenge > div { flex: 1 1 380px; min-width: 0; }
 .challenge h2 { margin: 14px 0 8px; font-size: clamp(20px, 2.6vw, 24px); font-weight: 800; line-height: 1.3; }
 .challenge p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--on-dark-muted); }
+.lanjut-progres { display: flex; align-items: center; gap: 12px; margin-top: 14px; font-size: 13px; font-weight: 700; color: var(--on-dark-muted); }
+.lanjut-progres .bar { flex: 0 1 220px; background: var(--green-700); }
+.lanjut-progres .bar > span { background: var(--accent); }
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
