@@ -64,8 +64,12 @@ Repo → **Settings → Secrets and variables → Actions → New repository sec
 | `FTP_SERVER` | host FTP dari cPanel → FTP Accounts → *Configure FTP Client* |
 | `FTP_USERNAME` | akun FTP khusus (disarankan dibatasi ke folder subdomain) |
 | `FTP_PASSWORD` | kata sandi akun FTP tersebut |
-| `FTP_SERVER_DIR` | **wajib**: folder subdomain, mis. `/detektifsains.speakverse.id`. Deploy menolak folder akar/home demi keamanan |
+| `FTP_SERVER_DIR` | **wajib**: `/detektifsains.speakverse.id/public` (Document Root subdomain). Deploy menolak folder akar/home demi keamanan |
 
 Setelah diisi, jalankan ulang lewat tab **Actions → Deploy ke cPanel → Run workflow**.
+
+### Catatan server
+
+`.htaccess`, `.user.ini`, dan `php.ini` di server tidak ikut di-deploy. `.htaccess` di folder `public` server wajib diawali baris `RewriteEngine On` (lihat `.htaccess` di repo ini); tanpa itu aturan rewrite dari folder home akun ikut berlaku dan situs error 500.
 
 Data profil siswa (nama, absen, sekolah) dan progres hanya disimpan di `localStorage` perangkat siswa.
