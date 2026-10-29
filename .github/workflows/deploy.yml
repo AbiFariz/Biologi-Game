@@ -103,3 +103,14 @@ jobs:
           # Laporan singkat: folder tujuan dan jumlah berkas (tanpa menampilkan isi folder lain)
           lf $TLS "cd $FTP_DIR; pwd" > laporan.txt 2>&1 || true
           echo "::notice title=Terkirim ke folder::$(tail -1 laporan.txt | sed 's#.*://[^/]*##')"
+
+      - name: Verifikasi situs
+        if: env.RAW_SERVER != ''
+        run: |
+          gagal=0
+          for u in / /materi.html /refleksi.html /assets/data/aktivitas.json "/api/tutor.php?status=1"; do
+            kode=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "https://detektifsains.speakverse.id$u")
+            echo "::notice title=$u::HTTP $kode"
+            [ "$kode" = "200" ] || gagal=1
+          done
+          [ $gagal = 0 ] || { echo "::error::Ada halaman yang tidak menjawab 200. Periksa .htaccess di folder public (lihat README)."; exit 1; }
