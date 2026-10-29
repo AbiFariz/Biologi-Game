@@ -32,10 +32,10 @@ window.NT_DATA = {
 
   /* Langkah berpikir Tutor Nalar, dipetakan ke indikator Ennis (2011). */
   langkah: [
-    { no: 1, nama: 'Jelaskan', tanya: 'Apa pertanyaan intinya dan apa yang kamu amati?', ennis: 'Memberikan penjelasan sederhana' },
-    { no: 2, nama: 'Cek bukti', tanya: 'Apakah datanya bisa dipercaya?', ennis: 'Membangun keterampilan dasar' },
-    { no: 3, nama: 'Simpulkan', tanya: 'Apa kesimpulanmu dan mengapa?', ennis: 'Menyimpulkan' },
-    { no: 4, nama: 'Perjelas', tanya: 'Apa arti istilahnya, apa asumsimu?', ennis: 'Memberikan penjelasan lebih lanjut' },
-    { no: 5, nama: 'Rancang strategi', tanya: 'Bagaimana cara mengujinya lagi?', ennis: 'Mengatur strategi dan taktik' }
+    { no: 1, nama: 'Jelaskan', tanya: 'Apa pertanyaan intinya dan apa yang kamu amati?', ennis: 'Memberikan penjelasan sederhana', arti: 'Memfokuskan pertanyaan dan menjelaskan apa yang diamati.' },
+    { no: 2, nama: 'Cek bukti', tanya: 'Apakah datanya bisa dipercaya?', ennis: 'Membangun keterampilan dasar', arti: 'Menilai apakah percobaan dan datanya dapat dipercaya.' },
+    { no: 3, nama: 'Simpulkan', tanya: 'Apa kesimpulanmu dan mengapa?', ennis: 'Menyimpulkan', arti: 'Menarik kesimpulan dari bukti beserta alasannya.' },
+    { no: 4, nama: 'Perjelas', tanya: 'Apa arti istilahnya, apa asumsimu?', ennis: 'Memberikan penjelasan lebih lanjut', arti: 'Menjelaskan istilah dan mengenali asumsi.' },
+    { no: 5, nama: 'Rancang strategi', tanya: 'Bagaimana cara mengujinya lagi?', ennis: 'Mengatur strategi dan taktik', arti: 'Merancang langkah atau percobaan untuk menguji dugaan.' }
   ]
 };

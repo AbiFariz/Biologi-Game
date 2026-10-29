@@ -1,0 +1,53 @@
+/* Detektif Sains — Modul 3: Refleksi */
+.r-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.r-tab {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+  border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
+  color: var(--green-900); text-decoration: none; font-size: 14px; font-weight: 600;
+}
+.r-tab:hover { border-color: var(--green-600); color: var(--green-900); }
+.r-tab[aria-current="page"] { background: var(--green-800); border-color: var(--green-800); color: #fff; }
+
+.r-empty p { margin: 0; color: var(--muted); }
+.r-empty .btn { align-self: flex-start; }
+
+.r-grid { display: flex; flex-wrap: wrap; gap: 22px; align-items: flex-start; }
+.r-grid > .panel { flex: 3 1 460px; min-width: 0; }
+.r-side { flex: 2 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+
+.r-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; }
+.r-legend { font-size: 13px; color: var(--muted); }
+
+.r-list { list-style: none; margin: 0; padding: 0; }
+.r-item { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 14px 0; border-top: 1px solid #EDF1EE; }
+.r-item:first-child { border-top: 0; }
+.r-info { flex: 1 1 260px; min-width: 0; }
+.r-nama { font-size: 15px; font-weight: 800; }
+.r-arti { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.r-bukti {
+  margin: 8px 0 0; padding: 8px 12px; border-left: 0; border-radius: 10px;
+  background: var(--ground); font-size: 14px; line-height: 1.5; color: #34443B; overflow-wrap: anywhere;
+}
+.r-bukti.kosong { color: var(--muted); font-style: italic; }
+.r-level { display: flex; align-items: center; gap: 6px; }
+.r-dot { width: 14px; height: 14px; border-radius: 999px; background: #DCE3DE; }
+.r-dot.on { background: var(--green-600); }
+.r-label { margin-left: 6px; font-size: 13px; font-weight: 700; min-width: 86px; }
+.r-note { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+
+.r-kesimpulan { background: var(--green-800); color: #fff; border-radius: 18px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; }
+.r-kesimpulan .pill { align-self: flex-start; }
+.r-kes-item { margin: 0; font-size: 15px; line-height: 1.6; }
+.r-kes-item small { display: block; font-size: 12px; font-weight: 700; color: var(--on-dark-muted); margin-bottom: 2px; }
+.r-kes-item + .r-kes-item { padding-top: 10px; border-top: 1px solid var(--green-700); }
+
+.r-form { display: flex; flex-direction: column; gap: 8px; }
+.r-form label { font-size: 14px; font-weight: 600; margin-top: 4px; }
+.r-form textarea {
+  font: inherit; font-size: 14px; border: 1px solid #C4CFC8; border-radius: 10px;
+  padding: 10px 12px; background: #FBFCFA; resize: vertical; color: var(--green-900);
+}
+.r-form .btn { margin-top: 6px; }
+.r-msg { margin: 0; font-size: 14px; font-weight: 700; color: var(--green-600); min-height: 0; }
+.r-msg.warn { color: #9A4A12; }
+.r-next { margin-top: 4px; width: 100%; }

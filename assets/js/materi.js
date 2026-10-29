@@ -189,7 +189,7 @@
       ? 'Bagus! Sekarang tulis kesimpulanmu dengan kalimatmu sendiri, lengkap dengan alasan dan buktinya.'
       : 'Kolom ini terbuka setelah kamu menyelesaikan 5 langkah bersama Tutor Nalar.';
     $('tersimpan').hidden = !st.selesai;
-    btn.textContent = nextAkt() ? 'Simpan kesimpulan & lanjut' : 'Simpan kesimpulan & kembali ke Beranda';
+    btn.textContent = 'Simpan kesimpulan & lanjut ke refleksi';
   }
 
   function setSibuk(v) {
@@ -305,6 +305,7 @@
       var label = { petunjuk: 'Minta petunjuk', belum_paham: 'Aku belum paham', cek_alasan: 'Cek alasanku' }[aksi];
       tambah({ peran: 'siswa', teks: label, langkah: st.langkah, tombol: aksi });
     }
+    st.mode = modeLLM ? 'llm' : 'terpandu';
     setSibuk(true);
 
     var jalan = modeLLM
@@ -360,8 +361,7 @@
     if (v.length < 20) { $('kesimpulan-bantu').textContent = 'Kesimpulanmu masih terlalu singkat. Tulis minimal satu kalimat lengkap beserta alasannya.'; $('kesimpulan').focus(); return; }
     st.kesimpulan = v; st.selesai = true; st.waktuSelesai = new Date().toISOString(); simpanState();
     catat('kesimpulan', v, { teks: '', level: null, naik: false });
-    var n = nextAkt();
-    location.href = n ? 'materi.html?sub=' + encodeURIComponent(subId) + '&a=' + encodeURIComponent(n.id) : 'index.html';
+    location.href = 'refleksi.html?a=' + encodeURIComponent(akt.id);
   });
 
   /* ---------- mulai ---------- */

@@ -12,7 +12,7 @@ Media pembelajaran web untuk penelitian skripsi **"Pengaruh Media IPA Berbasis L
 |---|---|---|
 | 1. Beranda | `index.html` | ✅ selesai |
 | 2. Materi + Tutor Nalar (LLM-CoT) | `materi.html` + `api/tutor.php` | ✅ selesai (submateri Pertumbuhan Tumbuhan, 4 aktivitas) |
-| 3. Refleksi & indikator Ennis | `refleksi.html` | ⏳ |
+| 3. Refleksi & indikator Ennis | `refleksi.html` | ✅ selesai |
 
 ## Langkah tutor ↔ indikator Ennis (2011)
 
@@ -38,6 +38,7 @@ Media pembelajaran web untuk penelitian skripsi **"Pengaruh Media IPA Berbasis L
 ```
 index.html            Modul 1 – Beranda
 materi.html           Modul 2 – Materi + Tutor Nalar
+refleksi.html         Modul 3 – Refleksi & jejak indikator Ennis
 api/tutor.php         perantara LLM + log penelitian
 assets/data/          konten aktivitas (JSON)
 docs/                 contoh konfigurasi (tidak ikut di-deploy)
