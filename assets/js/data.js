@@ -1,4 +1,6 @@
 /* Data konten bersama untuk semua modul Detektif Sains. */
+/* Penomoran aktivitas dalam submateri memakai huruf: 1 → a, 2 → b, dst. */
+window.NT_HURUF = function (no) { return String.fromCharCode(96 + no); };
 window.NT_DATA = {
   submateri: [
     {

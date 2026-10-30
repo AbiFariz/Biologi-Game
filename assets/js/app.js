@@ -183,7 +183,7 @@
           teks.textContent = 'Pilih submateri di bawah, atau mulai dari aktivitas pertama ini.';
           btn.textContent = 'Mulai →';
         }
-        judul.textContent = berikut.subJudul + ' · Aktivitas ' + berikut.akt.no + ': ' + berikut.akt.judul;
+        judul.textContent = berikut.subJudul + ' · ' + window.NT_HURUF(berikut.akt.no) + '. ' + berikut.akt.judul;
       })
       .catch(function () { /* biarkan isi bawaan */ });
   }

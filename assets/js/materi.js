@@ -247,7 +247,7 @@
       var t = document.createElement('a');
       t.className = 'm-tab';
       t.href = 'materi.html?sub=' + encodeURIComponent(subId) + '&a=' + encodeURIComponent(a.id);
-      t.textContent = a.no + '. ' + a.judul;
+      t.textContent = window.NT_HURUF(a.no) + '. ' + a.judul;
       var s = baca(kunciAkt(a.id), null);
       if (s && s.selesai) { var ok = document.createElement('span'); ok.className = 'ok'; ok.textContent = '✓'; ok.setAttribute('aria-label', 'selesai'); t.appendChild(ok); }
       if (a.id === akt.id) t.setAttribute('aria-current', 'page');
@@ -258,7 +258,7 @@
   function renderHeader() {
     var n = dataSub.aktivitas.length;
     $('crumb-sub').textContent = dataSub.judul;
-    $('crumb-akt').textContent = 'Aktivitas ' + akt.no + ': ' + akt.judul;
+    $('crumb-akt').textContent = window.NT_HURUF(akt.no) + '. ' + akt.judul;
     $('progres-teks').textContent = 'Aktivitas ' + akt.no + ' dari ' + n;
     $('progres-bar').style.width = Math.round((hitungProgres() / n) * 100) + '%';
     document.title = akt.judul + ' · Detektif Sains';

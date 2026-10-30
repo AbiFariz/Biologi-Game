@@ -64,7 +64,7 @@
       nav.appendChild(r);
     }
     semua.forEach(function (it) {
-      var t = el('a', 'r-tab', it.akt.no + '. ' + it.akt.judul);
+      var t = el('a', 'r-tab', window.NT_HURUF(it.akt.no) + '. ' + it.akt.judul);
       t.href = 'refleksi.html?a=' + encodeURIComponent(it.akt.id);
       if (aktif === it) t.setAttribute('aria-current', 'page');
       nav.appendChild(t);
@@ -72,7 +72,7 @@
   }
 
   function renderSatu(it) {
-    $('eyebrow').textContent = it.subJudul + ' · Aktivitas ' + it.akt.no + ': ' + it.akt.judul + ' · selesai';
+    $('eyebrow').textContent = it.subJudul + ' · ' + window.NT_HURUF(it.akt.no) + '. ' + it.akt.judul + ' · selesai';
     $('judul').textContent = 'Bagaimana caramu berpikir hari ini?';
     var ol = $('jejak'); ol.textContent = '';
     LANGKAH.forEach(function (l) {
@@ -117,7 +117,7 @@
     var dk = $('daftar-kesimpulan'); dk.textContent = '';
     semua.forEach(function (it) {
       var p = el('p', 'r-kes-item');
-      p.appendChild(el('small', null, 'Aktivitas ' + it.akt.no + ': ' + it.akt.judul));
+      p.appendChild(el('small', null, it.subJudul + ' · ' + window.NT_HURUF(it.akt.no) + '. ' + it.akt.judul));
       p.appendChild(document.createTextNode(it.st.kesimpulan ? '“' + it.st.kesimpulan + '”' : 'Kesimpulan belum ditulis.'));
       dk.appendChild(p);
     });
@@ -133,7 +133,7 @@
     }
     if (berikut) {
       a.href = 'materi.html?sub=' + encodeURIComponent(berikut.sub) + '&a=' + encodeURIComponent(berikut.akt.id);
-      a.textContent = 'Lanjut ke Aktivitas ' + berikut.akt.no + ': ' + berikut.akt.judul + ' →';
+      a.textContent = 'Lanjut ke ' + window.NT_HURUF(berikut.akt.no) + '. ' + berikut.akt.judul + ' →';
     } else {
       a.href = 'refleksi.html';
       a.textContent = 'Semua aktivitas selesai · Lihat ringkasan →';
