@@ -33,10 +33,14 @@ function konfigurasi(): array
     static $cfg = null;
     if ($cfg !== null) return $cfg;
     $cfg = [];
-    $berkas = dirname(__DIR__, 2) . '/detektifsains-config.php';
-    if (is_file($berkas)) {
-        $isi = include $berkas;
-        if (is_array($isi)) $cfg = $isi;
+    // Dicari di luar folder website: satu tingkat di atas public/ (folder subdomain),
+    // lalu folder home akun. Yang pertama ditemukan dipakai.
+    foreach ([dirname(__DIR__, 2), dirname(__DIR__, 3)] as $dir) {
+        $berkas = $dir . '/detektifsains-config.php';
+        if (is_file($berkas)) {
+            $isi = include $berkas;
+            if (is_array($isi)) { $cfg = $isi; break; }
+        }
     }
     $cfg += [
         'provider'    => '',          // anthropic | openai | gemini

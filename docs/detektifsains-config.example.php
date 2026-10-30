@@ -2,12 +2,12 @@
 /**
  * CONTOH konfigurasi Tutor Nalar (Detektif Sains).
  *
- * 1. Salin file ini ke FOLDER HOME akun cPanel (satu tingkat DI ATAS folder
- *    detektifsains.speakverse.id), dengan nama persis:
+ * 1. Salin file ini ke folder SUBDOMAIN, satu tingkat DI ATAS folder public, dengan nama:
  *        detektifsains-config.php
- *    Contoh lokasi: /home/NAMAAKUN/detektifsains-config.php
- *    JANGAN letakkan di dalam folder website, agar API key tidak bisa diakses dari internet.
- * 2. Isi provider, api_key, dan model di bawah.
+ *    Lokasi: /home/NAMAAKUN/detektifsains.speakverse.id/detektifsains-config.php
+ *    (folder home akun juga dibaca). JANGAN letakkan di dalam folder public,
+ *    agar API key dan password database tidak bisa diakses dari internet.
+ * 2. Isi provider, api_key, model, dan data database di bawah.
  * 3. Atur izin file ke 600 (File Manager → Permissions).
  *
  * Selama file ini belum ada, tutor berjalan dalam "mode terpandu" (pertanyaan
@@ -37,7 +37,7 @@ return [
     'db_user' => '',
     'db_pass' => '',
 
-    // Folder log percakapan (data penelitian, format JSONL per bulan). Default: folder home.
+    // Folder berkas log cadangan (JSONL per bulan). Default: di samping file konfigurasi ini.
     // 'log_dir' => '/home/NAMAAKUN/detektifsains-logs',
 
     // Batas permintaan per menit per alamat IP (satu kelas di Wi-Fi sekolah biasanya

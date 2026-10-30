@@ -29,9 +29,9 @@ Media pembelajaran web untuk penelitian skripsi **"Pengaruh Media IPA Berbasis L
 - Konten aktivitas: `assets/data/aktivitas.json` (fenomena, konsep kunci, pertanyaan + petunjuk tiap langkah Ennis).
 - `api/tutor.php` meneruskan percakapan ke LLM. Model diminta menulis penalaran langkah demi langkah (`analisis`, *Chain-of-Thought*) sebelum membalas siswa; penalaran ini **tidak** ditampilkan ke siswa, tetapi dicatat untuk peneliti.
 - Penyedia: Claude (`anthropic`), `openai` (atau API kompatibel OpenAI), atau `gemini`.
-- **Konfigurasi**: salin `docs/detektifsains-config.example.php` ke folder home cPanel (di luar folder website) dengan nama `detektifsains-config.php`, lalu isi `provider` dan `api_key`. Izin file 600.
+- **Konfigurasi**: salin `docs/detektifsains-config.example.php` menjadi `/home/speakver/detektifsains.speakverse.id/detektifsains-config.php` (satu tingkat di atas `public/`, jadi tidak bisa diakses dari internet; folder home akun juga dibaca), lalu isi `provider`, `api_key`, dan `db_*`. Izin file 600.
 - Tanpa file konfigurasi, tutor berjalan dalam **mode terpandu** (pertanyaan Sokratik tertulis per langkah).
-- **Log penelitian**: tabel MySQL `ds_log` (bila `db_name`, `db_user`, `db_pass` diisi di konfigurasi; tabel dibuat otomatis) dan selalu juga ke berkas cadangan `<folder home>/detektifsains-logs/tutor-YYYY-MM.jsonl`. Satu baris per interaksi: siswa, aktivitas, langkah, aksi, jawaban, analisis CoT, level (Mulai/Berkembang/Mahir), balasan tutor, kesimpulan, dan refleksi. Ekspor ke Excel/SPSS lewat phpMyAdmin → tabel `ds_log` → Export → CSV.
+- **Log penelitian**: tabel MySQL `ds_log` (bila `db_name`, `db_user`, `db_pass` diisi di konfigurasi; tabel dibuat otomatis) dan selalu juga ke berkas cadangan `/home/speakver/detektifsains.speakverse.id/detektifsains-logs/tutor-YYYY-MM.jsonl`. Satu baris per interaksi: siswa, aktivitas, langkah, aksi, jawaban, analisis CoT, level (Mulai/Berkembang/Mahir), balasan tutor, kesimpulan, dan refleksi. Ekspor ke Excel/SPSS lewat phpMyAdmin → tabel `ds_log` → Export → CSV.
 
 ## Struktur
 
