@@ -46,6 +46,10 @@ function konfigurasi(): array
         'batas_menit' => 300,         // per menit per IP (satu kelas sering berbagi IP Wi-Fi)
         'timeout'     => 30,
         'endpoint'    => '',          // opsional: URL API kompatibel OpenAI (mis. OpenRouter)
+        'db_host'     => 'localhost', // database MySQL (opsional) untuk log penelitian
+        'db_name'     => '',
+        'db_user'     => '',
+        'db_pass'     => '',
     ];
     return $cfg;
 }
@@ -63,12 +67,79 @@ function teks($v, int $maks = MAKS_TEKS): string
     return mb_substr(trim($s), 0, $maks);
 }
 
-function catatLog(array $baris): void
+/** Koneksi MySQL (null bila belum dikonfigurasi atau gagal). Tabel dibuat otomatis. */
+function db(): ?PDO
+{
+    static $pdo = false;
+    if ($pdo !== false) return $pdo;
+    $pdo = null;
+    $c = konfigurasi();
+    if ($c['db_name'] === '' || $c['db_user'] === '') return null;
+    try {
+        $pdo = new PDO('mysql:host=' . $c['db_host'] . ';dbname=' . $c['db_name'] . ';charset=utf8mb4', $c['db_user'], $c['db_pass'], [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_TIMEOUT => 5,
+        ]);
+        $pdo->exec("SET time_zone = '+07:00'");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS ds_log (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            waktu DATETIME NOT NULL,
+            mode VARCHAR(12) NOT NULL,
+            sesi VARCHAR(40) NOT NULL DEFAULT '',
+            nama VARCHAR(40) NOT NULL DEFAULT '',
+            absen VARCHAR(3) NOT NULL DEFAULT '',
+            sekolah VARCHAR(60) NOT NULL DEFAULT '',
+            aktivitas VARCHAR(8) NOT NULL,
+            langkah TINYINT UNSIGNED NOT NULL,
+            aksi VARCHAR(20) NOT NULL DEFAULT '',
+            teks_siswa TEXT NULL,
+            analisis_cot TEXT NULL,
+            level VARCHAR(12) NULL,
+            naik TINYINT(1) NOT NULL DEFAULT 0,
+            balasan TEXT NULL,
+            provider VARCHAR(20) NULL,
+            model VARCHAR(60) NULL,
+            galat VARCHAR(300) NULL,
+            KEY idx_siswa (nama, absen),
+            KEY idx_aktivitas (aktivitas, langkah),
+            KEY idx_waktu (waktu)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+    } catch (Throwable $e) {
+        $pdo = null;
+        catatBerkas(['mode' => 'db-galat', 'galat' => mb_substr($e->getMessage(), 0, 300)]);
+    }
+    return $pdo;
+}
+
+function catatBerkas(array $baris): void
 {
     $dir = konfigurasi()['log_dir'];
     if (!is_dir($dir) && !@mkdir($dir, 0750, true)) return;
     $baris = ['waktu' => date('c')] + $baris;
     @file_put_contents($dir . '/tutor-' . date('Y-m') . '.jsonl', json_encode($baris, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND | LOCK_EX);
+}
+
+/** Catat satu interaksi: ke MySQL (bila ada) dan selalu ke berkas JSONL sebagai cadangan. */
+function catatLog(array $baris): void
+{
+    catatBerkas($baris);
+    $pdo = db();
+    if (!$pdo) return;
+    try {
+        $s = $baris['siswa'] ?? [];
+        $q = $pdo->prepare('INSERT INTO ds_log (waktu, mode, sesi, nama, absen, sekolah, aktivitas, langkah, aksi, teks_siswa, analisis_cot, level, naik, balasan, provider, model, galat)
+            VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $q->execute([
+            (string)($baris['mode'] ?? ''), (string)($baris['sesi'] ?? ''),
+            (string)($s['nama'] ?? ''), (string)($s['absen'] ?? ''), (string)($s['sekolah'] ?? ''),
+            (string)($baris['aktivitas'] ?? ''), (int)($baris['langkah'] ?? 0), (string)($baris['aksi'] ?? ''),
+            $baris['teks_siswa'] ?? null, $baris['analisis_cot'] ?? null, $baris['level'] ?? null,
+            !empty($baris['naik']) ? 1 : 0, $baris['balasan'] ?? null,
+            $baris['provider'] ?? null, $baris['model'] ?? null, $baris['galat'] ?? null,
+        ]);
+    } catch (Throwable $e) {
+        catatBerkas(['mode' => 'db-galat', 'galat' => mb_substr($e->getMessage(), 0, 300)]);
+    }
 }
 
 function batasLaju(): void
@@ -89,7 +160,7 @@ function batasLaju(): void
 
 /* ---------------- status ---------------- */
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    keluar(200, ['llm' => llmAktif()]);
+    keluar(200, ['llm' => llmAktif(), 'db' => db() !== null]);
 }
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     keluar(405, ['galat' => 'Metode tidak diizinkan']);

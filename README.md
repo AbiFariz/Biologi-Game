@@ -31,7 +31,7 @@ Media pembelajaran web untuk penelitian skripsi **"Pengaruh Media IPA Berbasis L
 - Penyedia: Claude (`anthropic`), `openai` (atau API kompatibel OpenAI), atau `gemini`.
 - **Konfigurasi**: salin `docs/detektifsains-config.example.php` ke folder home cPanel (di luar folder website) dengan nama `detektifsains-config.php`, lalu isi `provider` dan `api_key`. Izin file 600.
 - Tanpa file konfigurasi, tutor berjalan dalam **mode terpandu** (pertanyaan Sokratik tertulis per langkah).
-- **Log penelitian**: `<folder home>/detektifsains-logs/tutor-YYYY-MM.jsonl` — satu baris per interaksi: siswa, aktivitas, langkah, jawaban, analisis CoT, level (Mulai/Berkembang/Mahir), balasan tutor, dan kesimpulan.
+- **Log penelitian**: tabel MySQL `ds_log` (bila `db_name`, `db_user`, `db_pass` diisi di konfigurasi; tabel dibuat otomatis) dan selalu juga ke berkas cadangan `<folder home>/detektifsains-logs/tutor-YYYY-MM.jsonl`. Satu baris per interaksi: siswa, aktivitas, langkah, aksi, jawaban, analisis CoT, level (Mulai/Berkembang/Mahir), balasan tutor, kesimpulan, dan refleksi. Ekspor ke Excel/SPSS lewat phpMyAdmin → tabel `ds_log` → Export → CSV.
 
 ## Struktur
 

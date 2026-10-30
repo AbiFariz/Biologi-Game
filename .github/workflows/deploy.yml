@@ -121,3 +121,4 @@ jobs:
             [ "$kode" = "200" ] || gagal=1
           done
           [ $gagal = 0 ] || { echo "::error::Ada halaman yang tidak menjawab 200. Periksa .htaccess di folder public (lihat README)."; exit 1; }
+          echo "::notice title=Status tutor & database::$(curl -s --max-time 20 'https://detektifsains.speakverse.id/api/tutor.php?status=1')"

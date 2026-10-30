@@ -29,6 +29,14 @@ return [
     // (misalnya OpenRouter: https://openrouter.ai/api/v1/chat/completions).
     // 'endpoint' => '',
 
+    // Database MySQL untuk log penelitian (opsional). Buat di cPanel → MySQL Databases.
+    // Nama database dan user biasanya diawali nama akun cPanel, mis. speakver_detektif.
+    // Tabel ds_log dibuat otomatis. Bila dikosongkan, log hanya disimpan ke berkas JSONL.
+    'db_host' => 'localhost',
+    'db_name' => '',
+    'db_user' => '',
+    'db_pass' => '',
+
     // Folder log percakapan (data penelitian, format JSONL per bulan). Default: folder home.
     // 'log_dir' => '/home/NAMAAKUN/detektifsains-logs',
 
