@@ -164,7 +164,7 @@ function batasLaju(): void
 
 /* ---------------- status ---------------- */
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    keluar(200, ['llm' => llmAktif(), 'db' => db() !== null]);
+    keluar(200, ['llm' => llmAktif(), 'db' => db() !== null, 'php' => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION]);
 }
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     keluar(405, ['galat' => 'Metode tidak diizinkan']);
