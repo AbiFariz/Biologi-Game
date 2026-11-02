@@ -20,6 +20,24 @@
       materi: @json(route('materi')),
       refleksi: @json(route('refleksi'))
     };
+    /* fetch dengan pengulangan: server hosting sesekali membalas 421 (Misdirected Request)
+      . Diulang sampai 3 kali dengan jeda singkat. */
+    window.dsFetch = function (url, opsi, sisa) {
+      sisa = sisa === undefined ? 3 : sisa;
+      return fetch(url, opsi).then(function (r) {
+        if (sisa > 0 && r.status === 421) {
+          return new Promise(function (ok) { setTimeout(ok, 500 + Math.random() * 700); })
+            .then(function () { return window.dsFetch(url, opsi, sisa - 1); });
+        }
+        return r;
+      }, function (e) {
+        if (sisa > 0) {
+          return new Promise(function (ok) { setTimeout(ok, 800); })
+            .then(function () { return window.dsFetch(url, opsi, sisa - 1); });
+        }
+        throw e;
+      });
+    };
   </script>
 </head>
 <body class="@yield('kelas_body')">

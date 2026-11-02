@@ -387,7 +387,7 @@
   }
 
   function panggilLLM(aksi) {
-    return fetch(API, {
+    return window.dsFetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ aksi: aksi, aktivitas: akt.id, langkah: st.langkah, pesan: riwayatUntukAPI(), siswa: profil(), sesi: st.sesi })
@@ -399,7 +399,7 @@
   function catat(aksi, teksSiswa, hasil) {
     // Mode terpandu: kirim catatan ke server untuk data penelitian (diabaikan bila gagal)
     try {
-      fetch(API, {
+      window.dsFetch(API, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
         body: JSON.stringify({ aksi: 'catat', aktivitas: akt.id, langkah: st.langkah, siswa: profil(), sesi: st.sesi,
           catatan: { mode: modeLLM ? 'llm' : 'terpandu', aksi_siswa: aksi, teks_siswa: (teksSiswa || '').slice(0, 800), balasan: (hasil.teks || '').slice(0, 800), level: hasil.level || null, naik: !!hasil.naik } })
@@ -495,7 +495,7 @@
   });
 
   /* ---------- mulai ---------- */
-  fetch(window.DS.data, { cache: 'no-cache' })
+  window.dsFetch(window.DS.data, { cache: 'no-cache' })
     .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
     .then(function (data) {
       dataSub = data.submateri[subId];
@@ -508,7 +508,7 @@
       }
       mulaiAktivitas();
       // Status ditanyakan lewat POST: sebagian server hosting menolak GET ke API (HTTP 421).
-      return fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ aksi: 'status' }), cache: 'no-store' })
+      return window.dsFetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ aksi: 'status' }), cache: 'no-store' })
         .then(function (r) { return r.ok ? r.json() : { llm: false }; })
         .catch(function () { return { llm: false }; })
         .then(function (s) {

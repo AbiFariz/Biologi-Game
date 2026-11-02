@@ -159,7 +159,7 @@
     msg.className = 'r-msg';
     aturLanjut(true);
     try {
-      fetch(window.DS.api, {
+      window.dsFetch(window.DS.api, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
         body: JSON.stringify({
           aksi: 'catat', aktivitas: aktif.akt.id, langkah: 5, sesi: aktif.st.sesi || '',
@@ -172,7 +172,7 @@
   });
 
   /* ---------- mulai ---------- */
-  fetch(window.DS.data, { cache: 'no-cache' })
+  window.dsFetch(window.DS.data, { cache: 'no-cache' })
     .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
     .then(function (data) {
       Object.keys(data.submateri).forEach(function (sub) {
