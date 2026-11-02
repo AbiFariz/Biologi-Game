@@ -92,7 +92,9 @@ class TutorController extends Controller
         }
 
         $level = in_array($hasil['level'] ?? null, ['Mulai', 'Berkembang', 'Mahir'], true) ? $hasil['level'] : null;
-        $naik = $aksi === 'jawab' && ($hasil['naik'] ?? false) === true;
+        // Aturan naik langkah dibuat pasti (tidak bergantung pada konsistensi LLM):
+        // Berkembang atau Mahir = lanjut; Mulai = tetap di langkah ini.
+        $naik = $aksi === 'jawab' && in_array($level, ['Berkembang', 'Mahir'], true);
         if ($aksi !== 'jawab') {
             $level = null;
         }

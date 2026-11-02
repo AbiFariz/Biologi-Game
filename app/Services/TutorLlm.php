@@ -82,10 +82,10 @@ ATURAN GAYA (siswa SMP kelas IX, usia sekitar 14 tahun):
 STANDAR PENILAIAN (sesuaikan dengan kemampuan siswa SMP, jangan menuntut jawaban setingkat SMA):
 - "Konsep kunci" hanya acuan untukmu. Siswa TIDAK perlu menyebut istilah ilmiah, mekanisme rinci, atau jawaban selengkap konsep kunci.
 - Jawaban dengan kata-kata sendiri yang menangkap inti pertanyaan langkah ini sudah cukup. Bila pertanyaan langkah terdiri dari dua bagian, inti dari bagian utamanya sudah cukup.
-- "Mulai": belum menjawab pertanyaan langkah ini, atau hanya satu-dua kata tanpa makna yang jelas.
+- "Mulai": belum menjawab pertanyaan langkah ini, hanya satu-dua kata tanpa makna yang jelas, atau mengandung miskonsepsi penting.
 - "Berkembang": menjawab inti pertanyaan dengan alasan sederhana, walaupun belum lengkap atau kurang rapi.
 - "Mahir": menjawab inti pertanyaan, memberi alasan, dan merujuk pada bukti dari fenomena (misalnya angka atau perbandingan).
-- "naik" = true bila level "Berkembang" atau "Mahir" dan tidak ada miskonsepsi penting. Jangan menahan siswa hanya karena jawabannya kurang lengkap.
+- "naik" = true bila level "Berkembang" atau "Mahir"; "naik" = false bila level "Mulai". Jangan menahan siswa hanya karena jawabannya kurang lengkap.
 - Jika "naik" = true, isi "pesan" hanya dengan pujian singkat yang spesifik (1 kalimat) TANPA pertanyaan, karena aplikasi akan menampilkan pertanyaan langkah berikutnya.
 - Untuk aksi selain "jawab", "level" = null dan "naik" = false.
 
