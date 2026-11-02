@@ -1,22 +1,30 @@
-# Cek cepat status Tutor AI di situs (tanpa kredensial). Jalankan manual dari tab Actions.
-# Satu permintaan uji dikirim atas nama "UJI-SISTEM" (hapus barisnya dari ds_log sebelum penelitian).
+# Cek cepat Tutor AI di situs (tanpa kredensial). Jalankan manual dari tab Actions.
+# Permintaan uji dikirim atas nama "UJI-SISTEM" (kosongkan ds_log sebelum penelitian).
 name: Cek Tutor AI
 on:
   workflow_dispatch:
   push:
-    paths: ['.github/workflows/cek-tutor.yml']
+    paths: ['.github/workflows/cek-tutor.yml', 'app/Services/TutorLlm.php']
 jobs:
   cek:
     runs-on: ubuntu-latest
     steps:
-      - name: Status dan satu balasan uji
+      - name: Tunggu deploy selesai
+        if: github.event_name == 'push'
+        run: sleep 240
+      - name: Status dan balasan uji
         run: |
-          for u in / /materi /api/tutor; do
-            echo "::notice title=GET $u::$(curl -s -o /tmp/h -w 'HTTP %{http_code} http%{http_version}' --max-time 30 https://detektifsains.speakverse.id$u) $(grep -o '<title>[^<]*' /tmp/h | head -1)"
-          done
-          echo "::notice title=HTTP/1.1 /api/tutor::$(curl -s --http1.1 --max-time 30 https://detektifsains.speakverse.id/api/tutor)"
           S=https://detektifsains.speakverse.id/api/tutor
-          echo "::notice title=Status (POST)::$(curl -s --max-time 30 -X POST -H 'Content-Type: application/json' -d '{"aksi":"status"}' $S)"
-          r=$(curl -s --max-time 60 -o /tmp/b -w '%{http_code}' -X POST -H 'Content-Type: application/json' \
-            -d '{"aksi":"jawab","aktivitas":"t1","langkah":1,"pesan":[{"peran":"tutor","teks":"Apa yang berbeda dari cawan A dan B?"},{"peran":"siswa","teks":"Cawan A yang kapasnya basah banyak bijinya berkecambah, cawan B kering tidak ada yang berkecambah."}],"siswa":{"nama":"UJI-SISTEM","absen":"0","sekolah":"-"},"sesi":"ujisistem"}' $S)
-          echo "::notice title=Balasan uji (HTTP $r)::$(cat /tmp/b)"
+          kirim () {  # $1 judul, $2 data JSON; diulang bila server membalas 421
+            for c in 1 2 3 4 5; do
+              r=$(curl -s --max-time 60 -o /tmp/b -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d "$2" $S)
+              [ "$r" = 421 ] || break; sleep 3
+            done
+            echo "::notice title=$1 (HTTP $r)::$(cat /tmp/b)"
+          }
+          SISWA='"siswa":{"nama":"UJI-SISTEM","absen":"0","sekolah":"-"},"sesi":"ujisistem"'
+          kirim "Status" '{"aksi":"status"}'
+          kirim "L1 jawaban sederhana" '{"aksi":"jawab","aktivitas":"t1","langkah":1,"pesan":[{"peran":"siswa","teks":"yang A banyak yg tumbuh, yg B ga ada. pertanyaannya kenapa yg B ga tumbuh"}],'"$SISWA"'}'
+          kirim "L3 jawaban sederhana" '{"aksi":"jawab","aktivitas":"t1","langkah":3,"pesan":[{"peran":"siswa","teks":"biji butuh air biar bisa tumbuh, soalnya yang kapasnya kering ga ada yang tumbuh"}],'"$SISWA"'}'
+          kirim "L3 jawaban keliru" '{"aksi":"jawab","aktivitas":"t1","langkah":3,"pesan":[{"peran":"siswa","teks":"karena kurang sinar matahari"}],'"$SISWA"'}'
+          kirim "L4 belum paham" '{"aksi":"belum_paham","aktivitas":"t1","langkah":4,"pesan":[{"peran":"siswa","teks":"aku ga ngerti maksud pertanyaannya"}],'"$SISWA"'}'
