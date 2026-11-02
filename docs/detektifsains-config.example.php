@@ -28,8 +28,9 @@ return [
     // Pastikan nama model masih tersedia di dokumentasi penyedia.
     'model'    => '',
 
-    // Opsional, khusus provider 'openai': URL API lain yang kompatibel dengan OpenAI
-    // (misalnya OpenRouter: https://openrouter.ai/api/v1/chat/completions).
+    // Opsional, khusus provider 'openai': URL API lain yang kompatibel dengan OpenAI, mis.
+    //   dinoiki  : https://ai.dinoiki.com/v1/chat/completions   (model mis. gpt-4o-mini)
+    //   OpenRouter: https://openrouter.ai/api/v1/chat/completions
     // 'endpoint' => '',
 
     // Database MySQL untuk log penelitian (opsional). Buat di cPanel → MySQL Databases.

@@ -151,14 +151,27 @@ TXT;
 
     private function openai(string $sistem, array $riwayat): string
     {
-        $j = $this->kirim(config('detektif.endpoint') ?: 'https://api.openai.com/v1/chat/completions', [
-            'Authorization' => 'Bearer ' . config('detektif.api_key'),
-        ], [
+        $url = config('detektif.endpoint') ?: 'https://api.openai.com/v1/chat/completions';
+        $header = ['Authorization' => 'Bearer ' . config('detektif.api_key')];
+        $dasar = [
             'model' => $this->model() ?: 'gpt-4o-mini',
-            'response_format' => ['type' => 'json_object'],
-            'max_completion_tokens' => 900,
             'messages' => array_merge([['role' => 'system', 'content' => $sistem]], $riwayat),
-        ]);
+        ];
+
+        try {
+            $j = $this->kirim($url, $header, $dasar + [
+                'response_format' => ['type' => 'json_object'],
+                'max_completion_tokens' => 900,
+            ]);
+        } catch (RuntimeException $e) {
+            // Gateway kompatibel OpenAI (mis. dinoiki, OpenRouter) kadang menolak parameter
+            // khusus untuk model tertentu (HTTP 400/422). Ulangi dengan format paling dasar;
+            // prompt sudah meminta balasan berupa JSON.
+            if (! preg_match('/^LLM HTTP (400|422) /', $e->getMessage())) {
+                throw $e;
+            }
+            $j = $this->kirim($url, $header, $dasar + ['max_tokens' => 900]);
+        }
 
         return (string) ($j['choices'][0]['message']['content'] ?? '');
     }
