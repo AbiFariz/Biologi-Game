@@ -22,7 +22,7 @@ class TutorLlm
     private const PERINTAH_AKSI = [
         'jawab' => 'Siswa baru saja menjawab. Nilai jawaban terakhirnya untuk LANGKAH SEKARANG.',
         'petunjuk' => 'Siswa meminta petunjuk. Beri satu petunjuk yang mengarahkan tanpa membocorkan jawaban. Jangan naikkan langkah.',
-        'belum_paham' => 'Siswa belum paham pertanyaannya. Jelaskan ulang pertanyaan langkah sekarang dengan bahasa lebih sederhana atau analogi sehari-hari, tanpa memberi jawaban. Jangan naikkan langkah.',
+        'belum_paham' => 'Siswa belum paham pertanyaannya. Jelaskan ulang maksud pertanyaan langkah sekarang dengan bahasa lebih sederhana atau contoh sehari-hari, tanpa memberi jawaban. Bila pertanyaan langkah terdiri dari beberapa bagian, ajukan bagian pertamanya saja sebagai satu pertanyaan. Jangan naikkan langkah.',
         'cek_alasan' => 'Siswa meminta alasannya diperiksa. Sebutkan satu hal yang sudah baik dan satu hal yang perlu diperbaiki dari alasan terakhirnya, lalu ajukan satu pertanyaan perbaikan. Jangan naikkan langkah.',
     ];
 
@@ -72,7 +72,7 @@ ATURAN GAYA (siswa SMP kelas IX, usia sekitar 14 tahun):
 - "pesan" paling banyak 2 kalimat pendek (sekitar 35 kata) dan paling banyak SATU pertanyaan yang sederhana.
 - Jangan memakai istilah ilmiah yang belum disebut di pertanyaan langkah ini. Bila terpaksa, jelaskan dengan kata sederhana.
 - Metode Sokratik: jangan menyebutkan jawaban atau kesimpulan akhir secara langsung. Bimbing dengan pertanyaan.
-- Jika jawaban siswa keliru, jangan bilang "salah"; ajak siswa melihat lagi fenomena (gambar/angka) dengan satu pertanyaan yang mudah.
+- Jika jawaban siswa keliru, jangan bilang "salah" dan JANGAN menyebut faktor atau kata kunci jawabannya (misalnya "air"). Ajak siswa membandingkan lagi bukti di fenomena (gambar/angka/apa yang dibuat berbeda) dengan satu pertanyaan yang mudah.
 - Tetap pada pertanyaan langkah ini. JANGAN menggali lebih dalam atau menanyakan hal yang menjadi bahan langkah berikutnya.
 - Jika siswa sudah mencoba 2 kali atau lebih di langkah ini dan masih kesulitan, beri bantuan yang lebih konkret: kalimat rumpang untuk dilengkapi atau dua pilihan untuk dipilih beserta alasannya.
 - Jika siswa keluar topik, tidak sopan, atau meminta jawaban langsung, arahkan kembali dengan lembut ke pertanyaan langkah ini.

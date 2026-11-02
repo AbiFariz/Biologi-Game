@@ -97,6 +97,9 @@ class TutorController extends Controller
             $level = null;
         }
         $pesan = mb_substr(trim((string) $hasil['pesan']), 0, 1200);
+        if ($naik) {
+            $pesan = $this->tanpaPertanyaan($pesan);
+        }
 
         $this->log->catat([
             'mode' => 'llm', 'provider' => $this->llm->provider(), 'model' => $this->llm->model(),
@@ -106,6 +109,19 @@ class TutorController extends Controller
         ]);
 
         return $this->json(['pesan' => $pesan, 'level' => $level, 'naik' => $naik]);
+    }
+
+    /**
+     * Saat siswa naik langkah, aplikasi langsung menampilkan pertanyaan langkah berikutnya,
+     * jadi pertanyaan tambahan dari LLM dibuang agar siswa tidak bingung menjawab yang mana.
+     */
+    private function tanpaPertanyaan(string $pesan): string
+    {
+        $kalimat = preg_split('/(?<=[.!?])\s+/u', $pesan) ?: [];
+        $sisa = array_filter($kalimat, fn ($k) => ! str_ends_with(rtrim($k), '?'));
+        $hasil = trim(implode(' ', $sisa));
+
+        return $hasil !== '' ? $hasil : 'Bagus, jawabanmu sudah tepat.';
     }
 
     /** @return array{0: ?array, 1: string} */

@@ -4,14 +4,14 @@ name: Cek Tutor AI
 on:
   workflow_dispatch:
   push:
-    paths: ['.github/workflows/cek-tutor.yml', 'app/Services/TutorLlm.php']
+    paths: ['.github/workflows/cek-tutor.yml', 'app/Services/TutorLlm.php', 'app/Http/Controllers/TutorController.php']
 jobs:
   cek:
     runs-on: ubuntu-latest
     steps:
       - name: Tunggu deploy selesai
         if: github.event_name == 'push'
-        run: sleep 240
+        run: sleep 420
       - name: Status dan balasan uji
         run: |
           S=https://detektifsains.speakverse.id/api/tutor
