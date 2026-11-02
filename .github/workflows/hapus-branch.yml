@@ -1,0 +1,14 @@
+# Sekali pakai: menghapus branch laravel-kerangka. Berkas ini dihapus lagi sesudahnya.
+name: Hapus branch laravel-kerangka
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/hapus-branch.yml']
+permissions:
+  contents: write
+jobs:
+  hapus:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: git push origin --delete laravel-kerangka || true
