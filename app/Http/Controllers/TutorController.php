@@ -120,8 +120,12 @@ class TutorController extends Controller
     private function tanpaPertanyaan(string $pesan): string
     {
         $kalimat = preg_split('/(?<=[.!?])\s+/u', $pesan) ?: [];
-        $sisa = array_filter($kalimat, fn ($k) => ! str_ends_with(rtrim($k), '?'));
-        $hasil = trim(implode(' ', $sisa));
+        // Ambil kalimat pujian pertama saja; kalimat tanya atau perintah lanjutan dibuang.
+        $sisa = array_values(array_filter($kalimat, fn ($k) => ! str_ends_with(rtrim($k), '?')));
+        $hasil = trim($sisa[0] ?? '');
+        if (mb_strlen($hasil) < 25 && isset($sisa[1]) && ! preg_match('/^(coba|sekarang|jelaskan|lalu|selanjutnya)\b/iu', $sisa[1])) {
+            $hasil .= ' ' . trim($sisa[1]);
+        }
 
         return $hasil !== '' ? $hasil : 'Bagus, jawabanmu sudah tepat.';
     }
