@@ -1,0 +1,18 @@
+# Cek cepat status Tutor AI di situs (tanpa kredensial). Jalankan manual dari tab Actions.
+# Satu permintaan uji dikirim atas nama "UJI-SISTEM" (hapus barisnya dari ds_log sebelum penelitian).
+name: Cek Tutor AI
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/cek-tutor.yml']
+jobs:
+  cek:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Status dan satu balasan uji
+        run: |
+          S=https://detektifsains.speakverse.id/api/tutor
+          echo "::notice title=Status::$(curl -s --max-time 30 $S)"
+          r=$(curl -s --max-time 60 -o /tmp/b -w '%{http_code}' -X POST -H 'Content-Type: application/json' \
+            -d '{"aksi":"jawab","aktivitas":"t1","langkah":1,"pesan":[{"peran":"tutor","teks":"Apa yang berbeda dari cawan A dan B?"},{"peran":"siswa","teks":"Cawan A yang kapasnya basah banyak bijinya berkecambah, cawan B kering tidak ada yang berkecambah."}],"siswa":{"nama":"UJI-SISTEM","absen":"0","sekolah":"-"},"sesi":"ujisistem"}' $S)
+          echo "::notice title=Balasan uji (HTTP $r)::$(cat /tmp/b)"
