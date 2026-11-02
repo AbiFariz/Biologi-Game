@@ -11,6 +11,10 @@ jobs:
     steps:
       - name: Status dan satu balasan uji
         run: |
+          for u in / /materi /api/tutor; do
+            echo "::notice title=GET $u::$(curl -s -o /tmp/h -w 'HTTP %{http_code} http%{http_version}' --max-time 30 https://detektifsains.speakverse.id$u) $(grep -o '<title>[^<]*' /tmp/h | head -1)"
+          done
+          echo "::notice title=HTTP/1.1 /api/tutor::$(curl -s --http1.1 --max-time 30 https://detektifsains.speakverse.id/api/tutor)"
           S=https://detektifsains.speakverse.id/api/tutor
           echo "::notice title=Status::$(curl -s --max-time 30 $S)"
           r=$(curl -s --max-time 60 -o /tmp/b -w '%{http_code}' -X POST -H 'Content-Type: application/json' \
