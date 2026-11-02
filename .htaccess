@@ -1,9 +1,0 @@
-# Detektif Sains — salinan referensi .htaccess di folder public server.
-# File ini TIDAK ikut di-deploy (agar bagian buatan cPanel tidak tertimpa).
-# Bila suatu saat .htaccess di server hilang, tambahkan 4 baris berikut di paling atas:
-DirectoryIndex index.html index.php
-<IfModule mod_rewrite.c>
-RewriteEngine On
-</IfModule>
-# Alasan: .htaccess di folder home akun berisi aturan rewrite untuk aplikasi Laravel.
-# Tanpa "RewriteEngine On" di sini, aturan itu ikut berlaku dan menyebabkan error 500.

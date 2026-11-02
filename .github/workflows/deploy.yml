@@ -1,14 +1,17 @@
-# Deploy otomatis ke cPanel (subdomain detektifsains.speakverse.id)
+# Deploy otomatis aplikasi Laravel ke cPanel (subdomain detektifsains.speakverse.id)
 # Berjalan setiap ada push ke branch main, SETELAH kode masuk ke GitHub.
 #
-# Kredensial TIDAK disimpan di repo. Isi sendiri di GitHub:
-#   Settings → Secrets and variables → Actions → New repository secret
-#     FTP_SERVER      contoh: veleta.id.rapidplex.com (atau IP server dari cPanel)
-#     FTP_USERNAME    akun FTP khusus yang dibatasi ke folder subdomain
-#     FTP_PASSWORD    kata sandi akun FTP tersebut
-#     FTP_SERVER_DIR  (opsional) folder tujuan di server. Kosongkan bila akun FTP
-#                     sudah langsung mengarah ke folder subdomain.
-# Selama secrets belum diisi, langkah deploy dilewati (workflow tetap hijau).
+# Kredensial TIDAK disimpan di repo. Isi di GitHub:
+#   Settings → Secrets and variables → Actions
+#     FTP_SERVER      contoh: veleta.id.rapidplex.com
+#     FTP_USERNAME    akun FTP
+#     FTP_PASSWORD    kata sandi akun FTP
+#     FTP_SERVER_DIR  folder aplikasi di server: /detektifsains.speakverse.id
+#                     (boleh juga diisi .../public; akhiran /public dibuang otomatis)
+#
+# Di server, Document Root subdomain = <folder aplikasi>/public.
+# Rahasia aplikasi ada di <folder aplikasi>/detektifsains-config.php (tidak diunggah);
+# .env disusun otomatis darinya oleh bootstrap/siapkan-env.php.
 
 name: Deploy ke cPanel
 
@@ -29,6 +32,7 @@ jobs:
       FTP_USER: ${{ secrets.FTP_USERNAME }}
       FTP_PASS: ${{ secrets.FTP_PASSWORD }}
       RAW_DIR: ${{ secrets.FTP_SERVER_DIR }}
+      SITUS: https://detektifsains.speakverse.id
     steps:
       - name: Ambil kode
         uses: actions/checkout@v4
@@ -37,46 +41,34 @@ jobs:
         if: env.RAW_SERVER == ''
         run: echo "::notice::Secrets FTP belum diisi — deploy ke cPanel dilewati."
 
-      - name: Periksa alamat server FTP
+      - name: Periksa alamat server dan folder tujuan
         if: env.RAW_SERVER != ''
         run: |
-          raw="$RAW_SERVER"
-          echo "Pemeriksaan isi secret FTP_SERVER (isinya tetap disembunyikan):"
-          case "$raw" in *"://"*) echo "  - mengandung awalan seperti https:// atau ftp://  → dibuang otomatis";; esac
-          case "$raw" in *" "*|*$'\t'*|*$'\n'*|*$'\r'*) echo "  - mengandung spasi/baris baru → dibuang otomatis";; esac
-          case "$raw" in *"/"*) echo "  - mengandung garis miring / → bagian setelahnya dibuang";; esac
-          host="$(printf '%s' "$raw" | tr -d '[:space:]')"
+          host="$(printf '%s' "$RAW_SERVER" | tr -d '[:space:]')"
           host="${host#*://}"; host="${host%%/*}"; host="${host%%:*}"; host="${host#*@}"
-          if [ -z "$host" ]; then
-            echo "::error::FTP_SERVER kosong setelah dibersihkan. Isi dengan alamat seperti veleta.id.rapidplex.com"; exit 1
-          fi
-          if ! getent hosts "$host" >/dev/null; then
-            echo "::error::Alamat di FTP_SERVER tidak ditemukan di internet (DNS). Ganti isinya dengan veleta.id.rapidplex.com atau IP server dari cPanel (Shared IP Address)."
-            exit 1
-          fi
-          echo "  ✓ alamat server ditemukan di DNS"
+          getent hosts "$host" >/dev/null || { echo "::error::Alamat FTP_SERVER tidak ditemukan (DNS)."; exit 1; }
           echo "FTP_HOST=$host" >> "$GITHUB_ENV"
 
-          # PENGAMAN: hanya boleh mengunggah ke folder subdomain, tidak pernah ke folder home/akar.
+          # PENGAMAN: hanya folder subdomain detektifsains, tidak pernah folder home/akar.
           dir="$(printf '%s' "$RAW_DIR" | tr -d '[:space:]')"
-          dir="${dir%/}"
+          dir="${dir%/}"; dir="${dir%/public}"; dir="${dir%/}"
           case "$dir" in
-            ""|"/"|"."|"./"|"~"|"/public_html"|"public_html")
-              echo "::error::FTP_SERVER_DIR belum diisi atau menunjuk ke folder akar. Isi dengan folder subdomain, contoh: /detektifsains.speakverse.id"
-              exit 1;;
+            ""|"/"|"."|"~"|*public_html*) echo "::error::FTP_SERVER_DIR harus folder subdomain, mis. /detektifsains.speakverse.id"; exit 1;;
           esac
-          case "$dir" in
-            *detektifsains*) ;;
-            *) echo "::error::FTP_SERVER_DIR harus folder subdomain detektifsains (contoh: /detektifsains.speakverse.id). Deploy dihentikan demi keamanan."; exit 1;;
-          esac
-          echo "FTP_DIR=$dir/" >> "$GITHUB_ENV"
+          case "$dir" in *detektifsains*) ;; *) echo "::error::FTP_SERVER_DIR harus folder subdomain detektifsains."; exit 1;; esac
+          echo "APP_DIR=$dir" >> "$GITHUB_ENV"
 
-      - name: Tandai versi aset (anti-cache browser)
+      - name: Siapkan PHP 8.4 + Composer
         if: env.RAW_SERVER != ''
-        run: |
-          v="${GITHUB_SHA::7}"
-          grep -rl "__VER__" --include="*.html" --include="*.js" . | xargs -r sed -i "s/__VER__/$v/g"
-          echo "Versi aset: $v"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+
+      - name: Pasang dependensi (tanpa paket pengembangan)
+        if: env.RAW_SERVER != ''
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress
 
       - name: Pasang lftp
         if: env.RAW_SERVER != ''
@@ -86,39 +78,45 @@ jobs:
         if: env.RAW_SERVER != ''
         run: |
           set -e
-          lf () {  # $1 = true untuk FTPS, false untuk FTP biasa; $2 = perintah
+          lf () {
             lftp -u "$FTP_USER","$FTP_PASS" "$FTP_HOST" -e "
-              set net:timeout 20; set net:max-retries 2; set net:reconnect-interval-base 5;
-              set ftp:passive-mode on;
-              set ftp:ssl-allow $1; set ftp:ssl-force $1; set ssl:check-hostname no;
-              $2; bye"
+              set net:timeout 30; set net:max-retries 3; set net:reconnect-interval-base 5;
+              set ftp:passive-mode on; set ftp:ssl-allow true; set ftp:ssl-force true; set ssl:check-hostname no;
+              $1; bye"
           }
-          MIRROR="mirror --reverse --no-perms --verbose=1 --parallel=4 \
-            --exclude-glob .git --exclude-glob .gitignore --exclude-glob .htaccess --exclude-glob .user.ini --exclude-glob php.ini --exclude .git/ --exclude .github/ \
-            --exclude-glob README.md --exclude docs/ ./ $FTP_DIR"
+          UMUM="--reverse --no-perms --parallel=8 --verbose=1"
 
-          echo "Mencoba koneksi aman (FTPS)…"
-          if lf true "$MIRROR"; then
-            TLS=true; echo "✓ Terkirim lewat FTPS"
-          else
-            echo "::warning::FTPS gagal, mencoba FTP biasa…"
-            lf false "$MIRROR"; TLS=false; echo "✓ Terkirim lewat FTP"
-          fi
+          echo "1) Pustaka (vendor) — hanya berkas yang ukurannya berubah"
+          lf "mirror $UMUM --ignore-time vendor $APP_DIR/vendor"
 
-          # Izin mengikuti bawaan server (--no-perms): folder 755, file 644.
+          echo "2) Aplikasi (folder public diunggah terakhir agar situs tidak sempat setengah jadi)"
+          lf "mirror $UMUM \
+            --exclude-glob .git* --exclude .git/ --exclude .github/ --exclude vendor/ --exclude public/ \
+            --exclude tests/ --exclude docs/ --exclude node_modules/ \
+            --exclude-glob .env --exclude-glob .env.* --exclude-glob detektifsains-config.php \
+            --exclude detektifsains-logs/ --exclude-glob '*.log' \
+            --exclude-glob .user.ini --exclude-glob php.ini \
+            --exclude-glob README.md --exclude-glob phpunit.xml \
+            ./ $APP_DIR"
 
-          # Laporan singkat: folder tujuan dan jumlah berkas (tanpa menampilkan isi folder lain)
-          lf $TLS "cd $FTP_DIR; pwd" > laporan.txt 2>&1 || true
-          echo "::notice title=Terkirim ke folder::$(tail -1 laporan.txt | sed 's#.*://[^/]*##')"
+          echo "3) Folder kerja Laravel"
+          lf "cd $APP_DIR; mkdir -p -f storage/logs storage/framework/cache/data storage/framework/sessions storage/framework/views bootstrap/cache"
+
+          echo "4) Folder public (aset + .htaccess Laravel)"
+          lf "mirror $UMUM --exclude-glob .user.ini --exclude-glob php.ini public $APP_DIR/public"
+
+          echo "5) Hapus berkas versi HTML lama (digantikan Laravel)"
+          lf "cd $APP_DIR/public; rm -f index.html materi.html refleksi.html api/tutor.php; rmdir api" || true
+          lf "cd $APP_DIR; rm -f index.html materi.html api/tutor.php; rmdir api; rm -r -f assets" || true
 
       - name: Verifikasi situs
         if: env.RAW_SERVER != ''
         run: |
           gagal=0
-          for u in / /materi.html /refleksi.html /assets/data/aktivitas.json "/api/tutor.php?status=1"; do
-            kode=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "https://detektifsains.speakverse.id$u")
+          for u in / /materi /refleksi /assets/data/aktivitas.json /api/tutor; do
+            kode=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "$SITUS$u")
             echo "::notice title=$u::HTTP $kode"
             [ "$kode" = "200" ] || gagal=1
           done
-          [ $gagal = 0 ] || { echo "::error::Ada halaman yang tidak menjawab 200. Periksa .htaccess di folder public (lihat README)."; exit 1; }
-          echo "::notice title=Status tutor & database::$(curl -s --max-time 20 'https://detektifsains.speakverse.id/api/tutor.php?status=1')"
+          echo "::notice title=Status tutor & database::$(curl -s --max-time 30 "$SITUS/api/tutor")"
+          [ $gagal = 0 ] || { echo "::error::Ada halaman yang tidak menjawab 200."; exit 1; }

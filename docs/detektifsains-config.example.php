@@ -10,6 +10,9 @@
  * 2. Isi provider, api_key, model, dan data database di bawah.
  * 3. Atur izin file ke 600 (File Manager → Permissions).
  *
+ * Aplikasi Laravel menyusun .env secara otomatis dari berkas ini setiap kali
+ * berkas ini diubah (APP_KEY dibuat sekali dan dipertahankan).
+ *
  * Selama file ini belum ada, tutor berjalan dalam "mode terpandu" (pertanyaan
  * Sokratik yang sudah ditulis per langkah Ennis), dan aplikasi tetap bisa dipakai.
  */
@@ -37,7 +40,7 @@ return [
     'db_user' => '',
     'db_pass' => '',
 
-    // Folder berkas log cadangan (JSONL per bulan). Default: di samping file konfigurasi ini.
+    // Folder berkas log cadangan (JSONL per bulan). Default: <folder aplikasi>/detektifsains-logs.
     // 'log_dir' => '/home/NAMAAKUN/detektifsains-logs',
 
     // Batas permintaan per menit per alamat IP (satu kelas di Wi-Fi sekolah biasanya

@@ -5,14 +5,18 @@ Media pembelajaran web untuk penelitian skripsi **"Pengaruh Media IPA Berbasis L
 - Sasaran: SMP kelas IX
 - Indikator berpikir kritis: Ennis (2011)
 - Situs: https://detektifsains.speakverse.id/
+- Framework: **Laravel 12** (PHP 8.4), MySQL
 
-## Status modul
+## Fitur
 
-| Modul | Halaman | Status |
+| Modul | Rute | Isi |
 |---|---|---|
-| 1. Beranda | `index.html` | ✅ selesai |
-| 2. Materi + Tutor Nalar (LLM-CoT) | `materi.html` + `api/tutor.php` | ✅ selesai (3 submateri × 4 aktivitas: Pertumbuhan Tumbuhan, Metamorfosis Hewan, Pertumbuhan Manusia) |
-| 3. Refleksi & indikator Ennis | `refleksi.html` | ✅ selesai |
+| 1. Beranda | `/` | Profil siswa, kartu *Lanjutkan Belajar*, 3 submateri dengan progres |
+| 2. Materi + Tutor Nalar (LLM-CoT) | `/materi?sub=…&a=…` | 3 submateri × 4 aktivitas (a–d): fenomena, ilustrasi, pemantik, tutor 5 langkah Ennis, kesimpulan |
+| 3. Refleksi | `/refleksi` | Jejak 5 indikator Ennis + bukti jawaban, kesimpulan, jurnal refleksi, ringkasan |
+| API tutor | `GET/POST /api/tutor` | Status, balasan tutor AI, pencatatan data penelitian |
+
+Alamat lama (`index.html`, `materi.html`, `refleksi.html`, `api/tutor.php`) tetap berfungsi dan dialihkan.
 
 ## Langkah tutor ↔ indikator Ennis (2011)
 
@@ -24,53 +28,61 @@ Media pembelajaran web untuk penelitian skripsi **"Pengaruh Media IPA Berbasis L
 | 4 · Perjelas | Memberikan penjelasan lebih lanjut |
 | 5 · Rancang strategi | Mengatur strategi dan taktik |
 
+## Struktur (bagian yang dibuat khusus)
+
+```
+routes/web.php                      halaman Beranda, Materi, Refleksi (+ pengalihan URL lama)
+routes/api.php                      /api/tutor (dibatasi laju per IP)
+app/Http/Controllers/TutorController.php   validasi, mode AI / terpandu, pencatatan
+app/Services/TutorLlm.php           prompt Chain-of-Thought + Claude/OpenAI/Gemini
+app/Services/LogPenelitian.php      log ke tabel ds_log (MySQL) + cadangan JSONL
+database/migrations/…_create_ds_log_table.php
+resources/views/                    layouts/base, partials/sidebar, beranda, materi, refleksi
+public/assets/                      CSS, JS halaman, ilustrasi, data aktivitas (JSON)
+config/detektif.php                 konfigurasi tutor (dari .env)
+bootstrap/siapkan-env.php           menyusun .env di server dari detektifsains-config.php
+docs/detektifsains-config.example.php
+```
+
 ## Tutor Nalar (LLM-CoT)
 
-- Konten aktivitas: `assets/data/aktivitas.json` (fenomena, konsep kunci, pertanyaan + petunjuk tiap langkah Ennis).
-- `api/tutor.php` meneruskan percakapan ke LLM. Model diminta menulis penalaran langkah demi langkah (`analisis`, *Chain-of-Thought*) sebelum membalas siswa; penalaran ini **tidak** ditampilkan ke siswa, tetapi dicatat untuk peneliti.
-- Penyedia: Claude (`anthropic`), `openai` (atau API kompatibel OpenAI), atau `gemini`.
-- **Konfigurasi**: salin `docs/detektifsains-config.example.php` menjadi `/home/speakver/detektifsains.speakverse.id/detektifsains-config.php` (satu tingkat di atas `public/`, jadi tidak bisa diakses dari internet; folder home akun juga dibaca), lalu isi `provider`, `api_key`, dan `db_*`. Izin file 600.
-- Tanpa file konfigurasi, tutor berjalan dalam **mode terpandu** (pertanyaan Sokratik tertulis per langkah).
-- **Log penelitian**: tabel MySQL `ds_log` (bila `db_name`, `db_user`, `db_pass` diisi di konfigurasi; tabel dibuat otomatis) dan selalu juga ke berkas cadangan `/home/speakver/detektifsains.speakverse.id/detektifsains-logs/tutor-YYYY-MM.jsonl`. Satu baris per interaksi: siswa, aktivitas, langkah, aksi, jawaban, analisis CoT, level (Mulai/Berkembang/Mahir), balasan tutor, kesimpulan, dan refleksi. Ekspor ke Excel/SPSS lewat phpMyAdmin → tabel `ds_log` → Export → CSV.
+- Konten aktivitas: `public/assets/data/aktivitas.json` (fenomena, konsep kunci, pertanyaan + petunjuk tiap langkah Ennis).
+- Model diminta menulis penalaran langkah demi langkah (`analisis`, *Chain-of-Thought*) sebelum membalas siswa; penalaran ini **tidak** ditampilkan ke siswa, tetapi dicatat untuk peneliti.
+- Tanpa API key, tutor berjalan dalam **mode terpandu** (pertanyaan Sokratik tertulis per langkah).
 
-## Struktur
+## Konfigurasi di server
 
-```
-index.html            Modul 1 – Beranda
-materi.html           Modul 2 – Materi + Tutor Nalar
-refleksi.html         Modul 3 – Refleksi & jejak indikator Ennis
-api/tutor.php         perantara LLM + log penelitian
-assets/data/          konten aktivitas (JSON)
-docs/                 contoh konfigurasi (tidak ikut di-deploy)
-assets/css/style.css  gaya bersama semua modul
-assets/js/data.js     data submateri & langkah berpikir
-assets/js/app.js      logika Beranda
-assets/img/           logo
-.github/workflows/    deploy otomatis ke cPanel
-```
+Rahasia tidak pernah disimpan di GitHub. Di server, buat
+`/home/speakver/detektifsains.speakverse.id/detektifsains-config.php` (satu tingkat di atas `public/`, izin 600) berdasarkan `docs/detektifsains-config.example.php`, berisi `provider`, `api_key`, `model`, dan `db_*`.
 
-Tampilan berupa HTML/CSS/JS; satu file PHP menjadi perantara ke API LLM supaya API key tidak pernah sampai ke browser siswa.
+Pada permintaan pertama (dan setiap kali berkas itu diubah) aplikasi menyusun `.env` Laravel darinya, termasuk `APP_KEY` acak yang dibuat sekali. Jadi untuk mengganti API key atau password database cukup ubah `detektifsains-config.php`.
+
+## Data penelitian
+
+Tabel MySQL **`ds_log`** (dibuat otomatis; definisinya juga ada di migration) dan cadangan berkas `detektifsains-logs/tutor-YYYY-MM.jsonl` di folder aplikasi. Satu baris per interaksi: waktu, siswa, aktivitas, langkah, aksi, jawaban, analisis CoT, level (Mulai/Berkembang/Mahir), balasan tutor, kesimpulan, dan refleksi.
+
+Ekspor ke Excel/SPSS: phpMyAdmin → `ds_log` → Export → CSV. Sebelum pengambilan data, kosongkan data uji coba: `ds_log` → Operations → *Empty the table (TRUNCATE)*.
 
 ## Alur rilis
 
-1. Setiap modul selesai → commit & push ke `main` di GitHub.
-2. GitHub Actions (`Deploy ke cPanel`) otomatis mengunggah file ke folder subdomain.
+1. Setiap perubahan → commit & push ke `main` di GitHub.
+2. GitHub Actions (`Deploy ke cPanel`): `composer install --no-dev`, unggah via FTP ke folder aplikasi (`vendor` lalu aplikasi, `public` terakhir), hapus berkas HTML versi lama, lalu memverifikasi halaman utama menjawab 200.
 
-### Sekali saja: isi Secrets di GitHub
-
-Repo → **Settings → Secrets and variables → Actions → New repository secret**:
-
-| Nama | Isi |
-|---|---|
-| `FTP_SERVER` | host FTP dari cPanel → FTP Accounts → *Configure FTP Client* |
-| `FTP_USERNAME` | akun FTP khusus (disarankan dibatasi ke folder subdomain) |
-| `FTP_PASSWORD` | kata sandi akun FTP tersebut |
-| `FTP_SERVER_DIR` | **wajib**: `/detektifsains.speakverse.id/public` (Document Root subdomain). Deploy menolak folder akar/home demi keamanan |
-
-Setelah diisi, jalankan ulang lewat tab **Actions → Deploy ke cPanel → Run workflow**.
+Secrets GitHub: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR` (= `/detektifsains.speakverse.id`; akhiran `/public` dibuang otomatis). Deploy menolak folder selain folder subdomain detektifsains.
 
 ### Catatan server
 
-`.htaccess`, `.user.ini`, dan `php.ini` di server tidak ikut di-deploy. `.htaccess` di folder `public` server wajib diawali baris `RewriteEngine On` (lihat `.htaccess` di repo ini); tanpa itu aturan rewrite dari folder home akun ikut berlaku dan situs error 500.
+- Document Root subdomain: `/detektifsains.speakverse.id/public`.
+- `public/.htaccess` berisi aturan Laravel; baris `RewriteEngine On` di dalamnya juga memutus aturan rewrite yang diwariskan dari `.htaccess` folder home akun (penyebab error 500 sebelumnya). Blok bawaan cPanel tetap disertakan.
+- `.user.ini` dan `php.ini` di server tidak ditimpa.
 
-Data profil siswa (nama, absen, sekolah) dan progres hanya disimpan di `localStorage` perangkat siswa.
+## Pengembangan lokal
+
+```
+composer install
+cp .env.example .env && php artisan key:generate   # isi DB_* dan LLM_* bila perlu
+php artisan migrate
+php artisan serve
+```
+
+Data profil siswa dan progres per aktivitas disimpan di `localStorage` perangkat siswa; interaksi untuk penelitian dikirim ke server.

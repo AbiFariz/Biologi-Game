@@ -1,0 +1,69 @@
+@extends('layouts.base')
+
+@section('judul', 'Beranda')
+
+@section('isi')
+<div class="layout">
+
+  @include('partials.sidebar', ['aktif' => 'beranda'])
+
+  <main class="main" id="konten">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" id="tanggal"></p>
+        <h1>Halo, <span id="nama-siswa">Siswa</span>!</h1>
+        <p class="lead">Hari ini kita belajar berpikir seperti ilmuwan: amati dulu, baru simpulkan.</p>
+      </div>
+      <label class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="sr-only">Cari submateri</span>
+        <input type="search" id="cari" placeholder="Cari submateri…" autocomplete="off">
+      </label>
+    </header>
+
+    <section class="challenge" aria-labelledby="lanjut-judul">
+      <div>
+        <span class="pill pill-accent" id="lanjut-label">MULAI PENYELIDIKANMU</span>
+        <h2 id="lanjut-judul">Pilih submateri di bawah, atau mulai dari aktivitas pertama.</h2>
+        <p id="lanjut-teks">Setiap aktivitas berisi satu fenomena. Tutor Nalar akan menemanimu berpikir langkah demi langkah.</p>
+        <div class="lanjut-progres" id="lanjut-progres" hidden>
+          <div class="bar"><span id="lanjut-bar"></span></div>
+          <span id="lanjut-angka"></span>
+        </div>
+      </div>
+      <a class="btn btn-accent" id="lanjut-btn" href="{{ route('materi', ['sub' => 'tumbuhan', 'a' => 't1']) }}">Mulai →</a>
+    </section>
+
+    <section aria-labelledby="sub" class="stack">
+      <h2 id="sub" class="section-title">Submateri</h2>
+      <p class="empty" id="kosong" hidden>Tidak ada submateri yang cocok dengan pencarianmu.</p>
+      <div class="cards" id="daftar-submateri"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="alur">
+      <h2 id="alur" class="section-title-sm">Cara Tutor Nalar membimbingmu</h2>
+      <ol class="steps" id="langkah"></ol>
+    </section>
+
+    <footer class="foot">Media penelitian skripsi · Pengaruh Media IPA Berbasis LLM-CoT dalam Meningkatkan Critical Thinking Siswa SMP</footer>
+  </main>
+</div>
+
+<dialog id="profil-dialog" aria-labelledby="profil-judul">
+  <form method="dialog" id="profil-form">
+    <h2 id="profil-judul">Kenalan dulu, yuk!</h2>
+    <p>Namamu dipakai untuk menyapamu dan tersimpan di perangkat ini saja.</p>
+    <label for="f-nama">Nama panggilan</label>
+    <input id="f-nama" name="nama" required maxlength="40" autocomplete="given-name">
+    <label for="f-absen">Nomor absen</label>
+    <input id="f-absen" name="absen" inputmode="numeric" maxlength="3">
+    <label for="f-sekolah">Nama sekolah</label>
+    <input id="f-sekolah" name="sekolah" maxlength="60">
+    <button type="submit" class="btn btn-primary">Simpan &amp; mulai</button>
+  </form>
+</dialog>
+@endsection
+
+@push('skrip')
+<script src="{{ \App\Support\Aset::url('assets/js/app.js') }}"></script>
+@endpush
