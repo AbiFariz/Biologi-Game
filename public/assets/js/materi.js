@@ -507,7 +507,8 @@
         akt = dataSub.aktivitas.filter(function (a) { var s = baca(kunciAkt(a.id), null); return !(s && s.selesai); })[0] || dataSub.aktivitas[0];
       }
       mulaiAktivitas();
-      return fetch(API + '?status=1', { cache: 'no-store' })
+      // Status ditanyakan lewat POST: sebagian server hosting menolak GET ke API (HTTP 421).
+      return fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ aksi: 'status' }), cache: 'no-store' })
         .then(function (r) { return r.ok ? r.json() : { llm: false }; })
         .catch(function () { return { llm: false }; })
         .then(function (s) {

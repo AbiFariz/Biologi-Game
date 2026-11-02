@@ -16,7 +16,7 @@ jobs:
           done
           echo "::notice title=HTTP/1.1 /api/tutor::$(curl -s --http1.1 --max-time 30 https://detektifsains.speakverse.id/api/tutor)"
           S=https://detektifsains.speakverse.id/api/tutor
-          echo "::notice title=Status::$(curl -s --max-time 30 $S)"
+          echo "::notice title=Status (POST)::$(curl -s --max-time 30 -X POST -H 'Content-Type: application/json' -d '{"aksi":"status"}' $S)"
           r=$(curl -s --max-time 60 -o /tmp/b -w '%{http_code}' -X POST -H 'Content-Type: application/json' \
             -d '{"aksi":"jawab","aktivitas":"t1","langkah":1,"pesan":[{"peran":"tutor","teks":"Apa yang berbeda dari cawan A dan B?"},{"peran":"siswa","teks":"Cawan A yang kapasnya basah banyak bijinya berkecambah, cawan B kering tidak ada yang berkecambah."}],"siswa":{"nama":"UJI-SISTEM","absen":"0","sekolah":"-"},"sesi":"ujisistem"}' $S)
           echo "::notice title=Balasan uji (HTTP $r)::$(cat /tmp/b)"

@@ -33,6 +33,9 @@ class TutorController extends Controller
         }
 
         $aksi = (string) ($in['aksi'] ?? '');
+        if ($aksi === 'status') {
+            return $this->status();
+        }
         if (! in_array($aksi, self::AKSI_VALID, true)) {
             return $this->json(['galat' => 'Aksi tidak dikenal'], 400);
         }
