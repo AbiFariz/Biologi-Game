@@ -75,9 +75,7 @@ a:hover { color: var(--green-900); }
 
 .main {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 36px 40px;
+  padding: 32px 28px; /* sejajar dengan tepi header; isi selalu selebar layar */
   display: flex;
   flex-direction: column;
   gap: 28px;
