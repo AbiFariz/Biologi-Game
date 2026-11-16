@@ -1,0 +1,23 @@
+# Cek apakah data penelitian masih bisa masuk ke database (tanpa meninggalkan data uji).
+name: Cek Database
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/cek-db.yml']
+jobs:
+  cek:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tunggu deploy selesai
+        if: github.event_name == 'push'
+        run: sleep 360
+      - name: Status dan uji tulis
+        run: |
+          S=https://detektifsains.speakverse.id/api/tutor
+          for a in status uji_db; do
+            for c in 1 2 3 4 5; do
+              r=$(curl -s --max-time 60 -o /tmp/b -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d "{\"aksi\":\"$a\"}" $S)
+              [ "$r" = 421 ] || [ "$r" = 504 ] || break; sleep 3
+            done
+            echo "::notice title=$a (HTTP $r)::$(cat /tmp/b)"
+          done

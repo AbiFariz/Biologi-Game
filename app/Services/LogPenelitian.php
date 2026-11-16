@@ -75,6 +75,40 @@ class LogPenelitian
         $t->index('waktu', 'idx_waktu');
     }
 
+    /**
+     * Uji apakah baris benar-benar bisa ditulis ke ds_log, lalu dibatalkan (rollback)
+     * sehingga tidak ada data uji yang tersisa di tabel penelitian.
+     *
+     * @return array{ok: bool, jumlah_baris: ?int, galat: ?string}
+     */
+    public function ujiTulis(): array
+    {
+        if (! $this->dbSiap()) {
+            return ['ok' => false, 'jumlah_baris' => null, 'galat' => 'Database tidak tersambung'];
+        }
+        try {
+            $sebelum = DB::table(self::TABEL)->count();
+            DB::beginTransaction();
+            try {
+                $id = DB::table(self::TABEL)->insertGetId([
+                    'waktu' => now(), 'mode' => 'uji', 'nama' => 'UJI-TULIS', 'aktivitas' => '-', 'langkah' => 0,
+                ]);
+                $ada = DB::table(self::TABEL)->where('id', $id)->exists();
+            } finally {
+                DB::rollBack();
+            }
+            $sesudah = DB::table(self::TABEL)->count();
+            if ($sesudah > $sebelum) {
+                // Tabel non-transaksional (MyISAM): hapus baris uji secara manual.
+                DB::table(self::TABEL)->where('nama', 'UJI-TULIS')->where('mode', 'uji')->delete();
+            }
+
+            return ['ok' => (bool) $ada, 'jumlah_baris' => $sebelum, 'galat' => null];
+        } catch (Throwable $e) {
+            return ['ok' => false, 'jumlah_baris' => null, 'galat' => mb_substr($e->getMessage(), 0, 200)];
+        }
+    }
+
     /** Catat satu interaksi. Kegagalan database tidak pernah mengganggu siswa. */
     public function catat(array $baris): void
     {

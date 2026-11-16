@@ -36,6 +36,9 @@ class TutorController extends Controller
         if ($aksi === 'status') {
             return $this->status();
         }
+        if ($aksi === 'uji_db') {
+            return $this->json(['db_tulis' => $this->log->ujiTulis()]);
+        }
         if (! in_array($aksi, self::AKSI_VALID, true)) {
             return $this->json(['galat' => 'Aksi tidak dikenal'], 400);
         }
